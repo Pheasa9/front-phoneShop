@@ -1,0 +1,63 @@
+<div class="container mt-4 mb-5">
+  <div class="row">
+    <aside class="col-lg-3 d-none d-lg-block">
+      <div class="category-sidebar shadow-sm">
+        <div class="sidebar-header">
+          <i class="bi bi-list me-2"></i> CATEGORIES
+        </div>
+        <ul class="list-unstyled m-0">
+          <li class="cat-item">Smartphones & Tablets</li>
+          <li class="cat-item">Laptops & Computers</li>
+          <li class="cat-item text-warning fw-bold">Daily Hot Deals</li>
+        </ul>
+      </div>
+    </aside>
+
+    <div class="col-lg-9">
+      <div class="hero-box rounded-4 mb-5 d-flex align-items-center">
+        <div class="ps-5">
+          <span class="badge bg-white text-dark mb-2 px-3 shadow-sm">NEW SEASON</span>
+          <h1 class="display-4 fw-black text-dark mb-3">CHOOSE YOUR <br> SMART DEVICES</h1>
+          <button class="btn btn-warning rounded-pill px-4 py-2 fw-bold shadow-sm">SHOP NOW</button>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+        <h4 class="fw-black m-0 border-bottom border-warning border-3 pb-2">BEST DEALS</h4>
+      </div>
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
+        <div class="col" *ngFor="let product of products">
+          <div class="shop-card">
+            <div class="img-wrapper">
+              <span class="sale-tag" *ngIf="product.discount">-{{product.discount}}%</span>
+              <img [src]="product.imagePath ? 'assets/images/' + product.imagePath : 'assets/images/placeholder.png'" 
+                   class="product-img" [alt]="product.name">
+              
+              <div class="hover-tools">
+                <button class="tool-btn"><i class="bi bi-heart"></i></button>
+                <button class="tool-btn"><i class="bi bi-eye"></i></button>
+              </div>
+            </div>
+
+            <div class="card-content">
+              <span class="cat-label">{{ product.model?.brand?.name }}</span>
+              <h6 class="prod-title">{{ product.name }}</h6>
+              
+              <div class="price-row mt-2">
+                <span class="main-price">${{ product.salePrice }}</span>
+                <span class="old-price text-decoration-line-through ms-2" *ngIf="product.oldPrice">
+                  ${{ product.oldPrice }}
+                </span>
+              </div>
+
+              <button class="btn btn-outline-dark w-100 rounded-pill mt-3 cart-btn">
+                ADD TO CART
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

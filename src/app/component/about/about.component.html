@@ -1,0 +1,105 @@
+<div class="about-page fade-in">
+  <header class="hero">
+    <div class="main-container">
+      <span class="label">EST. 2024</span>
+      <h1>Quality You Can Hold. <br> Service You Can Trust.</h1>
+      <p class="hero-subtext">CAR MOBILES is more than a retail store. We are a community of tech enthusiasts dedicated to bringing the latest mobile innovations to Cambodia with unmatched transparency.</p>
+    </div>
+  </header>
+
+  <section class="mission">
+    <div class="main-container">
+      <div class="mission-grid">
+        <div class="profile-card">
+          <div class="profile-img-wrap">
+            <img src="assets/img/abouts/owner.jpg" alt="Owner">
+          </div>
+          <div class="profile-details">
+            <h3>Pheasa Un (smos)</h3>
+            <span class="title">Founder & CEO</span>
+            <div class="social-box">
+              <a href="https://t.me/Phea_sa_smosjmr" target="_blank" class="btn tg">Telegram</a>
+              <a href="https://fb.com/sa.brogame" target="_blank" class="btn fb">Facebook</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-content">
+          <span class="section-tag">Our History</span>
+          <h2>The Journey of CAR MOBILES</h2>
+          <p>What started as a small vision in 2024 has quickly evolved into a trusted name in the mobile industry. Our founder, <strong>Pheasa Un</strong>, noticed a gap in the market for high-quality, verified pre-owned and new devices combined with honest technical advice.</p>
+          <p>Today, we serve thousands of customers, providing not just products, but solutions. We believe that buying a phone should be an exciting, worry-free experience.</p>
+          
+          <div class="stats">
+            <div class="stat"><strong>5k+</strong><span>Global Clients</span></div>
+            <div class="stat"><strong>100%</strong><span>Authentic</span></div>
+            <div class="stat"><strong>24/7</strong><span>Live Support</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="values-section">
+    <div class="main-container">
+      <div class="center-head">
+        <span class="section-tag">Our Philosophy</span>
+        <h2>What We Stand For</h2>
+      </div>
+      <div class="values-grid">
+        <div class="value-item">
+          <div class="v-icon">💎</div>
+          <h4>Quality First</h4>
+          <p>Every device undergoes a 50-point inspection before it reaches your hands. If it's not perfect, we don't sell it.</p>
+        </div>
+        <div class="value-item">
+          <div class="v-icon">🤝</div>
+          <h4>Honest Pricing</h4>
+          <p>No hidden fees or "tourist prices." We offer the most competitive market rates for everyone, every day.</p>
+        </div>
+        <div class="value-item">
+          <div class="v-icon">🛡️</div>
+          <h4>Full Warranty</h4>
+          <p>We stand by our products. All devices come with a standard shop warranty to give you peace of mind.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="team">
+    <div class="main-container">
+      <div class="center-head">
+        <span class="section-tag">Our People</span>
+        <h2>Expert Team</h2>
+        <p>Meet the professionals who make the magic happen.</p>
+      </div>
+      <div class="team-grid">
+        <div class="member" *ngFor="let member of team">
+          <div class="member-img">
+            <img [src]="member.img" [alt]="member.name">
+          </div>
+          <div class="member-info">
+            <h4>{{ member.name }}</h4>
+            <span>{{ member.role }}</span>
+            <div class="member-links">
+              <a [href]="member.tg" target="_blank">Telegram</a>
+              <a [href]="member.fb" target="_blank">Facebook</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="main-container">
+      <div class="cta-card">
+        <h2>Ready to find your next device?</h2>
+        <p>Visit our shop or browse our latest collection online.</p>
+        <button class="shop-now-btn" routerLink="/products">View All Products</button>
+                 
+
+      </div>
+    </div>
+  </section>
+</div>

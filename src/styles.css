@@ -1,0 +1,50 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
+:root {
+  --ee-yellow: #ffc107;
+  --ee-dark: #1a1d20;
+}
+
+/* 1. LAYOUT RESET: This fix pushes the footer to the bottom */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main.content-area {
+  flex: 1; /* This fills the space between header and footer */
+  background-color: #f8f9fa;
+}
+
+/* 2. STYLE CLASSES */
+.hover-yellow:hover { color: var(--ee-yellow) !important; }
+
+.badge-count {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  background: var(--ee-yellow);
+  color: var(--ee-dark);
+  font-size: 11px;
+  font-weight: 800;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.active-nav {
+  background-color: var(--ee-yellow) !important;
+  color: var(--ee-dark) !important;
+}

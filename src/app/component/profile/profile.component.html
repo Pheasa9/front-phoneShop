@@ -1,0 +1,28 @@
+<div class="profile-container" *ngIf="!loading">
+  <div class="profile-card">
+    
+    <div class="header-visual">
+      <div class="avatar">
+        {{ userName.length > 0 ? userName.charAt(0).toUpperCase() : 'U' }}
+      </div>
+    </div>
+
+    <div class="content">
+      <h2 class="name">{{ userName }}</h2>
+      <span class="role-badge">{{ role }}</span>
+
+      <div class="stats">
+        <div class="stat-item">
+          <span>Status</span>
+          <strong class="text-success">Online</strong>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" routerLink="/products">Shop Now</button>
+        <button class="btn-logout" (click)="onLogout()">Log Out</button>
+      </div>
+    </div>
+
+  </div>
+</div>

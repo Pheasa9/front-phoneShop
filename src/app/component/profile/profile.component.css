@@ -1,0 +1,53 @@
+.profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background-color: #f8f9fa;
+}
+
+.profile-card {
+  background: white;
+  width: 100%;
+  max-width: 380px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  overflow: hidden;
+  text-align: center;
+}
+
+.header-visual {
+  background: #007bff;
+  height: 100px;
+  position: relative;
+  margin-bottom: 50px;
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #007bff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.content { padding: 20px 30px 40px; }
+.name { margin: 0; font-weight: 700; }
+.role-badge { color: #6c757d; font-size: 0.8rem; text-transform: uppercase; }
+
+.stats { margin: 20px 0; border-top: 1px solid #eee; padding-top: 15px; }
+.stat-item { display: flex; justify-content: space-between; font-size: 0.9rem; }
+
+.actions { display: flex; flex-direction: column; gap: 10px; }
+.btn-primary { background: #007bff; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; }
+.btn-logout { background: white; color: #dc3545; border: 1px solid #dc3545; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; }

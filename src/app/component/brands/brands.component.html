@@ -1,0 +1,40 @@
+<div class="brands-wrapper fade-in">
+  <header class="brands-header">
+    <div class="header-content">
+      <span class="subtitle">Premium Selection</span>
+      <h2>Explore by Brand</h2>
+      <p>Select a manufacturer to view their latest mobile devices.</p>
+    </div>
+  </header>
+
+  <main class="brands-container">
+    <div class="brand-grid" *ngIf="brands.length > 0; else noBrands">
+      <div class="brand-card" *ngFor="let brand of brands" (click)="viewProducts(brand.id)">
+        
+        <div class="logo-box">
+          <img [src]="'assets/img/brand/' + brand.name.toLowerCase() + '.png'" 
+               [alt]="brand.name"
+               class="brand-img"
+               (error)="handleImageError($event)">
+        </div>
+
+        <div class="brand-details">
+          <h3>{{ brand.name }}</h3>
+          <span class="explore-link">
+            Browse Collection 
+            <i class="arrow-icon">→</i>
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    <ng-template #noBrands>
+      <div class="empty-container">
+        <div class="empty-icon">📂</div>
+        <h3>No Brands Found</h3>
+        <p>We couldn't find any brands in the catalog right now.</p>
+      </div>
+    </ng-template>
+  </main>
+</div>

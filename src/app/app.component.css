@@ -1,0 +1,82 @@
+/* Branding & Typography */
+.fw-black { font-weight: 900; }
+
+/* Navigation Styling */
+.main-header {
+  z-index: 1050;
+  transition: all 0.3s ease;
+}
+
+.nav-link {
+  color: #333 !important;
+  transition: 0.3s;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: #ffc107 !important;
+  border-bottom: 2px solid #ffc107;
+}
+
+/* Shopping Cart Badge */
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  background-color: #ffc107;
+  color: #000;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Pop Animation for Cart Badge */
+.animate-pop {
+  animation: badgePop 0.3s ease-out;
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0.5); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* Hover Effects */
+.hover-warning:hover {
+  color: #ffc107 !important;
+  cursor: pointer;
+}
+
+.hover-white:hover {
+  color: #fff !important;
+}
+
+/* Search Box Utils */
+.search-box i {
+  margin-left: -30px;
+  z-index: 5;
+}
+
+/* Footer Social Icons */
+.social-circle {
+  width: 35px;
+  height: 35px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.social-circle:hover {
+  background: #ffc107;
+  color: #000;
+  transform: translateY(-3px);
+}
