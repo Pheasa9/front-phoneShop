@@ -1,0 +1,88 @@
+<div class="glass-background">
+  <div class="container py-5">
+    <div class="glass-container shadow-2xl">
+      <div class="row g-0">
+        
+        <div class="col-lg-5 contact-sidebar">
+          <div class="sidebar-content">
+            <h2 class="sidebar-title">Let's build <br>something great.</h2>
+            <p class="sidebar-subtitle">Fill out the form and our team will get back to you within 24 hours.</p>
+
+            <div class="contact-methods">
+              <div class="method-pill">
+                <div class="pill-icon"><i class="bi bi-telephone"></i></div>
+                <div class="pill-text">
+                  <small>Call us</small>
+                  <strong>{{ contactInfo.phone }}</strong>
+                </div>
+              </div>
+
+              <div class="method-pill">
+                <div class="pill-icon"><i class="bi bi-envelope-heart"></i></div>
+                <div class="pill-text">
+                  <small>Email us</small>
+                  <strong>{{ contactInfo.emails[0] }}</strong>
+                </div>
+              </div>
+
+              <div class="method-pill">
+                <div class="pill-icon"><i class="bi bi-cursor"></i></div>
+                <div class="pill-text">
+                  <small>Find us</small>
+                  <strong>{{ contactInfo.location }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="social-pills">
+              <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
+              <a href="#" class="social-icon"><i class="bi bi-github"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7 form-panel">
+          <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="premium-form">
+            <div class="form-header">
+              <h3>Send Message</h3>
+              <div class="accent-line"></div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6 field-wrap">
+                <input type="text" name="fn" [(ngModel)]="contactData.firstName" required placeholder="First Name">
+                <span class="focus-border"></span>
+              </div>
+              <div class="col-md-6 field-wrap">
+                <input type="text" name="ln" [(ngModel)]="contactData.lastName" required placeholder="Last Name">
+                <span class="focus-border"></span>
+              </div>
+              <div class="col-md-12 field-wrap">
+                <input type="email" name="em" [(ngModel)]="contactData.emailId" required placeholder="Your Email Address">
+                <span class="focus-border"></span>
+              </div>
+              <div class="col-md-12 field-wrap">
+                <textarea name="msg" [(ngModel)]="contactData.message" rows="4" required placeholder="Tell us about your project..."></textarea>
+                <span class="focus-border"></span>
+              </div>
+            </div>
+
+            <div class="submit-section">
+              <div class="captcha-pill">
+                <code>p s t 8 s</code>
+                <input type="text" name="cap" [(ngModel)]="contactData.captchaInput" placeholder="Verify" required>
+              </div>
+              
+              <button type="submit" [disabled]="f.invalid || isSending" class="btn-gradient">
+                <span *ngIf="!isSending">Send Message <i class="bi bi-arrow-right-short"></i></span>
+                <span *ngIf="isSending">Processing... <span class="loader"></span></span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
