@@ -6,6 +6,7 @@ import { AboutComponent } from './component/about/about.component';
 import { ProfileComponent } from './component/profile/profile.component';
 import { HomeComponent } from './component/home/home.component';
 import { ContactComponent } from './component/contact/contact.component';
+import { ProdcutDetailComponent } from './component/prodcut-detail/prodcut-detail.component';
 
 
 export const routes: Routes = [
@@ -16,6 +17,8 @@ export const routes: Routes = [
       { path: 'profile', component: ProfileComponent },
        { path: 'home', component: HomeComponent },
          { path: 'contact', component:ContactComponent  },
+          { path: 'product-details/:id', component: ProdcutDetailComponent },
+
 
   { path: '', redirectTo: 'brands', pathMatch: 'full' }
   

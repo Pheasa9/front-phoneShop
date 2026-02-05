@@ -4,10 +4,13 @@
       <h1>Phone <span>MOBILES</span></h1>
     </div>
     <div class="nav-right">
-      <button class="cart-btn" (click)="isCheckoutMode = !isCheckoutMode" [class.active]="isCheckoutMode">
-        <span class="bag-icon">👜</span>
-        <span class="bag-count" *ngIf="cart.length > 0">{{ cart.length }}</span>
-      </button>
+      <button class="floating-cart"
+        (click)="isCheckoutMode = !isCheckoutMode"
+        [class.active]="isCheckoutMode"
+        aria-label="Open cart">
+  👜
+  <span class="floating-count" *ngIf="cart.length > 0">{{ cart.length }}</span>
+</button>
     </div>
   </nav>
 
@@ -49,11 +52,19 @@
           </div>
           <h3 class="model-name">{{ p.name }}</h3>
           <div class="price-action">
-            <span class="price-text">${{ (p.salePrice || 0) | number }}</span>
-            <button class="small-add-btn" (click)="addToCart(p)" [disabled]="p.availableUnit === 0">
-              {{ p.availableUnit > 0 ? '+' : '✕' }}
-            </button>
-          </div>
+  <span class="price-text">${{ (p.salePrice || 0) | number }}</span>
+
+  <div class="btn-row">
+    <button class="details-btn" (click)="goToDetails(p.id)">
+      Details
+    </button>
+
+    <button class="small-add-btn" (click)="addToCart(p)" [disabled]="p.availableUnit === 0">
+      {{ p.availableUnit > 0 ? '+' : '✕' }}
+    </button>
+  </div>
+</div>
+
         </div>
       </div>
     </div>

@@ -1,391 +1,433 @@
-/* Container & Layout */
-.shop-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  font-family: 'Inter', -apple-system, sans-serif;
-  background-color: #fafafa;
-  min-height: 100vh;
-}
-
-/* Navbar */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 0;
-}
-
-.brand-logo h1 {
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: -1px;
-  color: #1d1d1f;
-}
-
-.brand-logo span {
-  color: #0071e3; /* Modern Blue */
-}
-
-/* Toolbar (Search & Filter) */
-.toolbar {
-  display: flex;
-  gap: 15px;
-  margin: 30px 0;
-  align-items: center;
-}
-
-.search-input-wrapper {
-  position: relative;
-  flex: 1;
-}
-
-.search-glyph {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #86868b;
-}
-
-.form-control {
-  width: 100%;
-  padding: 12px 12px 12px 40px;
-  border-radius: 12px;
-  border: 1px solid #d2d2d7;
-  background: #fff;
-  font-size: 1rem;
-  transition: all 0.2s;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #0071e3;
-  box-shadow: 0 0 0 4px rgba(0,113,227,0.1);
-}
-
-.form-select {
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #d2d2d7;
-  background: #fff;
-  cursor: pointer;
-}
-
-/* Product Grid */
-.compact-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 25px;
-  padding-bottom: 50px;
-}
-
-/* Product Card */
-.iphone-card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  border: 1px solid #f2f2f2;
-}
-
-.iphone-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-}
-
-.image-frame {
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 15px;
-  position: relative;
-}
-
-.phone-img {
-  max-height: 100%;
-  object-fit: contain;
-}
-
-/* Status Badges */
-.status-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: #ff3b30;
-  color: white;
-  font-size: 10px;
-  font-weight: bold;
-  padding: 4px 8px;
-  border-radius: 6px;
-}
-
-.status-badge.out {
-  background: #86868b;
-}
-
-/* Info Section */
-.info-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.brand-tag {
-  font-size: 12px;
-  text-transform: uppercase;
-  color: #86868b;
-  font-weight: 600;
-}
-
-.model-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0 0 15px 0;
-  color: #1d1d1f;
-}
-
-.price-action {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.price-text {
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.small-add-btn {
-  background: #1d1d1f;
-  color: #fff;
-  border: none;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.2s;
-}
-
-.small-add-btn:hover:not(:disabled) {
-  background: #0071e3;
-  transform: scale(1.1);
-}
-
-.small-add-btn:disabled {
-  background: #d2d2d7;
-  cursor: not-allowed;
-}
-
-/* Cart Button */
-.cart-btn {
+/* =========================
+   BASE PAGE
+========================= */
+.shop-container{
+  min-height:100vh;
   background: #f5f5f7;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 12px;
-  cursor: pointer;
+  padding: 24px;
+  color:#1d1d1f;
+  font-family: ui-sans-serif, system-ui, -apple-system, "SF Pro Display",
+               "SF Pro Text", Segoe UI, Roboto, Arial;
+}
+
+/* divider */
+.divider{
+  border:0;
+  height:1px;
+  background: rgba(29,29,31,.12);
+  margin: 16px 0 20px;
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+.toolbar{
+  display:flex;
+  gap: 12px;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom: 20px;
+}
+
+.search-input-wrapper{
+  flex: 1;
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background:#fff;
+  border: 1px solid rgba(29,29,31,.14);
+}
+
+.search-glyph{ opacity:.55; }
+
+.form-control{
+  width:100%;
+  border:0;
+  outline:none;
+  background: transparent;
+  font-size: 14px;
+  color:#1d1d1f;
+}
+
+.form-control::placeholder{
+  color: rgba(29,29,31,.45);
+}
+
+.brand-filter{ width: 190px; }
+
+.form-select{
+  width:100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(29,29,31,.14);
+  background:#fff;
+  outline:none;
+  color:#1d1d1f;
+}
+
+/* =========================
+   GRID
+========================= */
+.compact-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+/* =========================
+   CARD
+========================= */
+.iphone-card{
+  background:#fff;
+  border: 1px solid rgba(29,29,31,.12);
+  border-radius: 22px;
+  overflow:hidden;
+  box-shadow: 0 10px 28px rgba(0,0,0,.08);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.iphone-card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(0,0,0,.12);
+}
+
+/* =========================
+   IMAGE (FIXED FIT — NO WHITE BOX)
+========================= */
+.image-frame{
+  height: 190px;
+  padding: 0 !important;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(29,29,31,.10);
   position: relative;
 }
 
-.bag-count {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #0071e3;
-  color: white;
-  font-size: 10px;
-  width: 18px;
+/* subtle stage shadow */
+.image-frame::after{
+  content:"";
+  position:absolute;
+  bottom: 14px;
+  left: 18px;
+  right: 18px;
   height: 18px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: radial-gradient(closest-side, rgba(0,0,0,.18), transparent 70%);
+  filter: blur(6px);
 }
 
-/* Animations */
-.fade-in {
-  animation: fadeIn 0.5s ease-in;
+/* image fills frame and removes padding */
+.phone-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* IMPORTANT */
+  object-position: center;
+  background: transparent;
+  filter: drop-shadow(0 14px 18px rgba(0,0,0,.14));
+  transition: transform .25s ease;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.iphone-card:hover .phone-img{
+  transform: scale(1.03);
 }
 
-/* Color Dot */
-.color-dot {
+/* =========================
+   STOCK BADGE
+========================= */
+.status-badge{
+  position:absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255,149,0,.14);
+  border: 1px solid rgba(255,149,0,.26);
+  color: #8a4b00;
+}
+
+.status-badge.out{
+  background: rgba(255,59,48,.12);
+  border-color: rgba(255,59,48,.22);
+  color: #9f1b14;
+}
+
+/* =========================
+   INFO
+========================= */
+.phone-info{
+  padding: 14px 16px 18px;
+}
+
+.info-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom: 10px;
+}
+
+.brand-tag{
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(29,29,31,.06);
+  color: rgba(29,29,31,.72);
+}
+
+.color-dot{
   width: 12px;
   height: 12px;
-  border-radius: 50%;
-  border: 1px solid #d2d2d7;
-}
-/* Layout & Background */
-.checkout-layout {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
-  background-color: #f5f5f7; /* Light gray Apple background */
-  min-height: 80vh;
+  border-radius: 999px;
+  border: 2px solid rgba(29,29,31,.12);
 }
 
-/* Main Card */
-.checkout-card {
-  background: #ffffff;
-  width: 100%;
-  max-width: 500px;
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+.model-name{
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
-/* Header */
-.checkout-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
+/* =========================
+   PRICE + ACTIONS
+========================= */
+.price-action{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
 }
 
-.checkout-header h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #1d1d1f;
-  margin: 0;
+.price-text{
+  font-size: 15px;
+  font-weight: 900;
+  color:#1d1d1f;
 }
 
-.back-link {
-  background: none;
-  border: none;
-  color: #0071e3;
-  font-weight: 500;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: opacity 0.2s;
+.btn-row{
+  display:flex;
+  gap: 8px;
 }
 
-.back-link:hover {
-  text-decoration: underline;
-  opacity: 0.8;
-}
-
-/* Scrollable Item Area */
-.scroll-area {
-  max-height: 400px;
-  overflow-y: auto;
-  margin-bottom: 20px;
-  padding-right: 10px;
-}
-
-/* Custom Scrollbar */
-.scroll-area::-webkit-scrollbar {
-  width: 6px;
-}
-.scroll-area::-webkit-scrollbar-thumb {
-  background: #d2d2d7;
-  border-radius: 10px;
-}
-
-/* Bag Items */
-.bag-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 0;
-  border-bottom: 1px solid #f2f2f2;
-}
-
-.bag-meta strong {
-  display: block;
-  font-size: 1.05rem;
-  color: #1d1d1f;
-  margin-bottom: 4px;
-}
-
-.bag-price {
-  color: #86868b;
-  font-size: 0.95rem;
-  margin: 0;
-}
-
-.remove-btn {
-  background: #fff1f0;
-  border: none;
-  color: #ff3b30;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.remove-btn:hover {
-  background: #ff3b30;
-  color: white;
-}
-
-/* Summary & Total */
-.bag-summary {
-  background: #fafafa;
-  border-radius: 16px;
-  padding: 20px;
-  margin-top: 10px;
-}
-
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.summary-row span {
-  color: #86868b;
-  font-size: 1.1rem;
-}
-
-.total-amount {
-  font-size: 1.5rem;
-  color: #1d1d1f;
-  font-weight: 700;
-}
-
-/* Confirm Button */
-.checkout-btn {
-  width: 100%;
-  background: #0071e3;
-  color: white;
-  border: none;
-  padding: 16px;
+.details-btn{
+  padding: 9px 12px;
   border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  border: 1px solid rgba(29,29,31,.14);
+  background:#fff;
+  color:#1d1d1f;
+  font-weight: 700;
+  cursor:pointer;
+  transition: background .15s ease, transform .15s ease;
+}
+
+.details-btn:hover{
+  background: rgba(29,29,31,.03);
+  transform: translateY(-1px);
+}
+
+.small-add-btn{
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 0;
+  background: #0071e3;
+  color:#fff;
+  font-weight: 900;
+  cursor:pointer;
+  transition: transform .15s ease, opacity .15s ease;
+}
+
+.small-add-btn:hover{ transform: translateY(-1px); }
+
+.small-add-btn:disabled{
+  opacity:.35;
+  cursor:not-allowed;
+}
+
+/* =========================
+   EMPTY / LOADING
+========================= */
+.empty-results{
+  background:#fff;
+  border: 1px dashed rgba(29,29,31,.22);
+  border-radius: 22px;
+  padding: 30px;
+  text-align:center;
+  color: rgba(29,29,31,.65);
+}
+
+.empty-icon{ font-size: 30px; }
+
+.spinner-center{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 10px;
+  padding: 26px 0;
+  color: rgba(29,29,31,.65);
+}
+
+/* =========================
+   CHECKOUT
+========================= */
+.checkout-layout{
+  display:flex;
+  justify-content:center;
+  padding-top: 10px;
+}
+
+.checkout-card{
+  width: min(620px, 100%);
+  background:#fff;
+  border: 1px solid rgba(29,29,31,.12);
+  border-radius: 22px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.10);
+  overflow:hidden;
+}
+
+.checkout-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(29,29,31,.12);
+}
+
+.back-link{
+  background: transparent;
+  border: 0;
+  cursor:pointer;
+  font-weight: 800;
+  color: #0071e3;
+}
+
+.scroll-area{
+  max-height: 380px;
+  overflow:auto;
+  padding: 14px 16px;
+}
+
+.bag-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(29,29,31,.12);
+  background: rgba(29,29,31,.02);
+  margin-bottom: 12px;
+}
+
+.bag-price{
+  margin: 4px 0 0;
+  color: rgba(29,29,31,.65);
+}
+
+.remove-btn{
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,59,48,.24);
+  background: rgba(255,59,48,.06);
+  color: #b4231a;
+  font-weight: 700;
+  cursor:pointer;
+}
+
+.bag-summary{
+  padding: 16px 18px 18px;
+  border-top: 1px solid rgba(29,29,31,.12);
+}
+
+.summary-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom: 12px;
+}
+
+.total-amount{
+  font-size: 18px;
+}
+
+.checkout-btn{
+  width:100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 0;
+  background: #0071e3;
+  color:#fff;
+  font-weight: 900;
+  cursor:pointer;
+}
+
+.checkout-btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+/* =========================
+   FLOATING CART BUTTON
+========================= */
+.floating-cart{
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  border: 1px solid rgba(29,29,31,.14);
+  background: #ffffff;
+  box-shadow: 0 14px 35px rgba(0,0,0,.14);
   cursor: pointer;
-  transition: transform 0.2s, background 0.2s;
-  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+  z-index: 999;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
 }
 
-.checkout-btn:hover {
-  background: #0077ed;
-  transform: translateY(-2px);
+.floating-count{
+  position:absolute;
+  top:-7px;
+  right:-7px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #0071e3;
+  color:#fff;
+  font-size: 11px;
+  font-weight: 900;
+  border: 2px solid #f5f5f7;
 }
 
-.checkout-btn:active {
-  transform: translateY(0);
+/* =========================
+   ANIMATION
+========================= */
+.fade-in{
+  animation: fade .18s ease both;
 }
 
-.empty-bag-msg {
-  text-align: center;
-  padding: 40px 0;
-  color: #86868b;
-  font-style: italic;
+@keyframes fade{
+  from{ opacity:0; transform: translateY(6px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 720px){
+  .toolbar{
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .brand-filter{
+    width:100%;
+  }
 }
