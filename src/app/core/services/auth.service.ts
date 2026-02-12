@@ -36,12 +36,65 @@ login(username: string, password: string): Observable<any> {
   );
 }
 
+// put inside AuthService class
+
+getDecodedToken(): any | null {
+  const token = this.getToken();
+  if (!token) return null;
+
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    console.error('❌ Cannot decode token', e);
+    return null;
+  }
+}
+
+getRole(): string | null {
+  const payload = this.getDecodedToken();
+  if (!payload) return null;
+
+  // support many backend formats
+  const role =
+    payload.role ||
+    payload.roles?.[0] ||
+    payload.authorities?.[0] ||
+    payload.authority ||
+    payload.scopes?.[0] ||
+    null;
+
+  return role;
+}
+
+isAdmin(): boolean {
+  const payload = this.getDecodedToken();
+  if (!payload || !Array.isArray(payload.authorities)) return false;
+
+  return payload.authorities.includes('ROLE_ADMIN');
+}
+
+isSale(): boolean {
+  const payload = this.getDecodedToken();
+  if (!payload || !Array.isArray(payload.authorities)) return false;
+
+  // example sale role (adjust if needed)
+  return payload.authorities.includes('ROLE_SALE');
+}
+
+
+
+
+
   getToken(): string | null {
     return localStorage.getItem('jwtToken');
   }
 
-  public logout(): void {
-    localStorage.removeItem('jwtToken');
-    localStorage.clear();
-  }
+ // LOGOUT
+
+public logout(): void {
+  localStorage.removeItem('jwtToken');
+  localStorage.removeItem('jwtToken'); // (safe duplicate)
+  localStorage.clear();                // clears everything
+  sessionStorage.clear();              // if you used session storage anywhere
+}
 }

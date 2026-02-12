@@ -1,0 +1,116 @@
+<div class="wrap">
+
+  <div class="header">
+    <div>
+      <div class="h-title">Models</div>
+      <div class="h-sub">Filter by brand + search by name</div>
+    </div>
+
+    <button class="btn btn-primary" (click)="openCreate()">＋ Add Model</button>
+  </div>
+
+  <div class="toolbar">
+
+    <div class="search">
+      <span class="s-ico">⌕</span>
+      <input
+        [ngModel]="searchName"
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Search model... (example: ip)"
+      />
+    </div>
+
+    <select class="select" [(ngModel)]="selectedBrandId" (change)="onBrandChange()">
+      <option value="">All brands</option>
+      <option *ngFor="let b of brands" [value]="b.id">{{ b.name }}</option>
+    </select>
+
+    <button class="btn btn-ghost" (click)="reset()">Reset</button>
+
+    <div class="meta">
+      <button class="btn btn-soft" (click)="prev()" [disabled]="page === 0">Prev</button>
+      <span class="pill">Page {{ page + 1 }}</span>
+      <button class="btn btn-soft" (click)="next()" [disabled]="isLoading">Next</button>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <div *ngIf="msg" class="ok">{{ msg }}</div>
+    <div *ngIf="errorMsg" class="err">{{ errorMsg }}</div>
+
+    <div *ngIf="isLoading" class="loading">Loading...</div>
+
+    <div class="table-wrap" *ngIf="!isLoading && models.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width:80px">ID</th>
+            <th>Model</th>
+            <th>Brand</th>
+            <th style="width:140px;text-align:right;">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let m of models">
+            <td><span class="id-pill">{{ m.id }}</span></td>
+
+            <td>
+              <div class="cell">
+                <div class="avatar">{{ (m.name || '?')[0] }}</div>
+                <div class="info">
+                  <div class="name">{{ m.name }}</div>
+                  <div class="sub">Phone Model</div>
+                </div>
+              </div>
+            </td>
+
+            <td><span class="brand-pill">{{ m.brand?.name }}</span></td>
+
+            <td class="actions">
+              <button class="icon-btn" (click)="openEdit(m)" title="Edit">✎</button>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+    <div *ngIf="!isLoading && models.length === 0" class="empty">
+      No models found.
+    </div>
+
+  </div>
+
+  <!-- Modal (bootstrap-safe) -->
+  <div class="ps-backdrop" *ngIf="showModal">
+    <div class="ps-modal">
+      <div class="ps-head">
+        <div class="ps-title">{{ isEdit ? 'Edit Model' : 'Create Model' }}</div>
+        <button class="ps-x" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="ps-body">
+        <label class="lbl">Brand</label>
+        <select class="inp" [(ngModel)]="form.brandId">
+          <option [ngValue]="0">-- Select Brand --</option>
+          <option *ngFor="let b of brands" [ngValue]="b.id">{{ b.name }}</option>
+        </select>
+
+        <label class="lbl">Model name</label>
+        <input class="inp" [(ngModel)]="form.name" placeholder="e.g. iPhone 15" />
+
+        <div *ngIf="errorMsg" class="ps-err">{{ errorMsg }}</div>
+      </div>
+
+      <div class="ps-actions">
+        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="save()" [disabled]="isLoading">
+          {{ isLoading ? 'Saving...' : (isEdit ? 'Update' : 'Create') }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

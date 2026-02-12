@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../core/services/auth.service';
 
 @Component({
+  
   selector: 'app-login',
   standalone: true,
   imports: [FormsModule, CommonModule],
@@ -22,6 +23,8 @@ import { AuthService } from '../core/services/auth.service';
             <input type="password" class="form-control" [(ngModel)]="password" name="password" required>
           </div>
           <button type="submit" class="btn btn-primary w-100">Login</button>
+          
+
         </form>
         <div *ngIf="error" class="alert alert-danger mt-3">{{ error }}</div>
       </div>
@@ -35,7 +38,7 @@ import { AuthService } from '../core/services/auth.service';
 export class LoginComponent {
   username = ''; password = ''; error = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(public auth: AuthService, private router: Router) {}
 
   onSubmit() {
   this.error = '';
@@ -47,10 +50,18 @@ export class LoginComponent {
   console.log('-----------------------');
 
   this.auth.login(this.username, this.password).subscribe({
-    next: (res) => {
-      console.log('✅ Login Response Received:', res);
-      this.router.navigate(['/profile']);
-    },
+    next: () => {
+  const decoded = this.auth.getDecodedToken();
+  console.log('✅ Decoded token:', decoded);
+
+  if (this.auth.isAdmin()) {
+    this.router.navigate(['/admin/dashboard']);
+  } else {
+    // SALE / USER
+    this.router.navigate(['/brands']); // or '/profile'
+  }
+},
+
     error: (err) => {
       console.error('❌ Login Error:', err);
       this.error = 'Invalid credentials.';

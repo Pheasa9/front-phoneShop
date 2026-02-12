@@ -1,0 +1,115 @@
+<div class="wrap">
+
+  <div class="head">
+    <div>
+      <div class="title">Sale Report</div>
+      <div class="sub">Report by date range (product sold summary)</div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="field">
+      <label>Start date</label>
+      <input type="date" [(ngModel)]="startDate" />
+    </div>
+
+    <div class="field">
+      <label>End date</label>
+      <input type="date" [(ngModel)]="endDate" />
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" (click)="load()" [disabled]="isLoading">
+        {{ isLoading ? 'Loading...' : 'Generate' }}
+      </button>
+
+      <button class="btn btn-ghost" (click)="reset()" [disabled]="isLoading">
+        Reset
+      </button>
+
+      <!-- ✅ ONLY ONE cancel button -->
+      <button class="btn btn-danger"
+              (click)="toggleCancelForm()"
+              [disabled]="isLoading">
+        {{ showCancelForm ? 'Close Cancel' : 'Cancel Sale' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ✅ Cancel form -->
+  <div class="cancel-box" *ngIf="showCancelForm">
+    <div class="cancel-title">Cancel Sale</div>
+    <div class="cancel-sub">Enter Sale ID then click Confirm Cancel</div>
+
+    <div class="cancel-row">
+      <input class="cancel-input"
+             type="number"
+             [(ngModel)]="cancelSaleId"
+             placeholder="Sale ID (example: 5)" />
+
+      <button class="btn btn-danger"
+              (click)="cancelById()"
+              [disabled]="isLoading">
+        {{ isLoading ? 'Cancelling...' : 'Confirm Cancel' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="errorMsg" class="err">{{ errorMsg }}</div>
+
+  <div class="summary" *ngIf="!isLoading && rows.length > 0">
+    <div class="sum-card">
+      <div class="k">Total Units</div>
+      <div class="v">{{ totalUnits }}</div>
+    </div>
+
+    <div class="sum-card">
+      <div class="k">Total Amount</div>
+      <div class="v">${{ totalAmount | number:'1.0-2' }}</div>
+    </div>
+
+    <div class="sum-card">
+      <div class="k">Products</div>
+      <div class="v">{{ rows.length }}</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div *ngIf="isLoading" class="loading">Loading report...</div>
+
+    <div *ngIf="!isLoading && rows.length === 0" class="empty">
+      No data. Choose dates then click Generate.
+    </div>
+
+    <div class="table-wrap" *ngIf="!isLoading && rows.length > 0">
+      <table class="table">
+        <thead>
+        <tr>
+          <th style="width:110px">Product ID</th>
+          <th>Product Name</th>
+          <th style="width:140px">Total Unit</th>
+          <th style="width:170px; text-align:right;">Total Amount</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let r of rows">
+          <td><span class="pill">{{ r.productId }}</span></td>
+          <td>{{ r.productName }}</td>
+          <td>{{ r.totalUnit }}</td>
+          <td style="text-align:right;">${{ r.totalAmount | number:'1.0-2' }}</td>
+        </tr>
+        </tbody>
+
+        <tfoot>
+        <tr>
+          <td colspan="2" class="foot">Total</td>
+          <td class="foot">{{ totalUnits }}</td>
+          <td class="foot" style="text-align:right;">${{ totalAmount | number:'1.0-2' }}</td>
+        </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+</div>
