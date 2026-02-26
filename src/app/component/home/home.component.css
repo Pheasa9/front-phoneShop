@@ -1,9 +1,11 @@
 /* Background with Depth */
 .hero-section {
-  background: radial-gradient(circle at top right, #a7ffc3 0%, #88f7a7 100%);
+  background: radial-gradient(circle at top right, #7eb5f3 0%, #a6a6f8 100%);
   min-height: 100vh;
   display: flex;
   align-items: center;
+  
+
   overflow: hidden;
   padding: 80px 0;
 }

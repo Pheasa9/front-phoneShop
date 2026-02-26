@@ -20,9 +20,15 @@ export class ProductAdminService {
     return this.http.get<any[]>(`${this.baseUrl}/filter`, { params });
   }
 
-  // POST /products   (ProductDto: modelId, ColorId)
+  // POST /products   (ProductDto: modelId, colorId)
   createProduct(payload: any): Observable<any> {
     return this.http.post<any>(this.baseUrl, payload);
+  }
+
+  // ✅ NEW: POST /products/with-image  (multipart/form-data)
+  // FormData must include: modelId, colorId, file
+  createProductWithImage(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/with-image`, formData);
   }
 
   // POST /products/importProduct
@@ -42,9 +48,7 @@ export class ProductAdminService {
     return this.http.post<any>(`${this.baseUrl}/uploads`, formData);
   }
 
-
   deleteProduct(id: number) {
-  return this.http.delete(`${this.baseUrl}/${id}`);
-}
-
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
 }

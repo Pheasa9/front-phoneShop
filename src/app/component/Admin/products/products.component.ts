@@ -16,6 +16,9 @@ import { ProductAdminService } from '../../../core/services/admin/product.servic
 })
 export class AdminProductsComponent implements OnInit {
 
+  // ✅ backend base (for showing images from /uploads/**)
+  readonly API_BASE = 'http://localhost:8080';
+
   products: any[] = [];
   brands: any[] = [];
   models: any[] = [];
@@ -51,7 +54,12 @@ export class AdminProductsComponent implements OnInit {
     price: null as any
   };
 
+  // excel upload
   selectedFile: File | null = null;
+
+  // ✅ image upload for create product
+  createImageFile: File | null = null;
+  createImagePreview: string | null = null;
 
   constructor(
     private auth: AuthService,
@@ -73,7 +81,7 @@ export class AdminProductsComponent implements OnInit {
   loadBrands() {
     this.brandApi.getBrands(0, 300).subscribe({
       next: (res: any) => {
-        const list = res?.list || res?.content || res?.data || [];
+        const list = res?.list || res?.content || res?.data || res || [];
         this.brands = Array.isArray(list) ? list : [];
       },
       error: (e: any) => console.error(e)
@@ -110,6 +118,12 @@ export class AdminProductsComponent implements OnInit {
     return b?.name || '';
   }
 
+  // ✅ show uploaded image from backend
+  imgUrl(imagePath?: string): string {
+    if (!imagePath) return '';
+    return `${this.API_BASE}/uploads/products/${imagePath}`;
+  }
+
   // ---------- FILTER UX ----------
   onSearchChange(v: string) {
     this.searchName = v;
@@ -138,49 +152,87 @@ export class AdminProductsComponent implements OnInit {
     this.msg = '';
     this.errorMsg = '';
 
+    // ✅ ensure brands exist (if user opens fast before loadBrands finished)
+    if (!this.brands || this.brands.length === 0) {
+      this.loadBrands();
+    }
+
     this.models = [];
     this.createBrandId = 0;
     this.createForm = { modelId: 0, colorId: 0 };
+
+    // reset image
+    this.createImageFile = null;
+    this.createImagePreview = null;
   }
 
   closeCreate() {
     this.showCreate = false;
   }
 
-  // ✅ called when brand changes (load models)
- onCreateBrandSelect(brandId: any) {
-  console.log('🔵 Brand selected raw value:', brandId);
+  // ✅ Brand change -> load models
+  onCreateBrandSelect(brandId: any) {
+    const id = Number(brandId);
+    this.createBrandId = id;
 
-  const id = Number(brandId);
-  this.createBrandId = id;
+    this.models = [];
+    this.createForm.modelId = 0;
 
-  this.models = [];
-  this.createForm.modelId = 0;
+    if (!id || id <= 0) return;
 
-  if (!id || id <= 0) return;
+    this.brandApi.getModelsByBrand(id).subscribe({
+      next: (res: any) => {
+        // ✅ handle many response shapes
+        const list = res?.list || res?.content || res?.data || res || [];
+        this.models = Array.isArray(list) ? list : [];
+        console.log('✅ MODELS LOADED:', this.models);
+      },
+      error: (e: any) => console.error('❌ Load models error:', e)
+    });
+  }
 
-  // ✅ use /models?brandId=...
-  this.brandApi.getModelsByBrand(id).subscribe({
-    next: (res: any) => {
-      this.models = Array.isArray(res?.list) ? res.list : [];
-      console.log('✅ MODELS LOADED:', this.models);
-      console.log('🧾 FIRST MODEL OBJECT:', this.models[0]);
-    },
-    error: (e: any) => console.error('❌ Load models error:', e)
-  });
-}
-
-
-  // ✅ called when model changes (force number + log)
   onModelChange(v: any) {
-    console.log('🟡 model raw value:', v);
     this.createForm.modelId = Number(v);
-    console.log('🟢 modelId saved:', this.createForm.modelId);
+  }
+
+  // ✅ image select
+  onCreateImageSelected(event: any) {
+    const file: File | undefined = event?.target?.files?.[0];
+    if (!file) {
+      this.createImageFile = null;
+      this.createImagePreview = null;
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      this.errorMsg = 'Please select an image file (png/jpg/webp)';
+      this.createImageFile = null;
+      this.createImagePreview = null;
+      return;
+    }
+
+    const max = 5 * 1024 * 1024;
+    if (file.size > max) {
+      this.errorMsg = 'Image too large (max 5MB)';
+      this.createImageFile = null;
+      this.createImagePreview = null;
+      return;
+    }
+
+    this.createImageFile = file;
+
+    const reader = new FileReader();
+    reader.onload = () => (this.createImagePreview = reader.result as string);
+    reader.readAsDataURL(file);
+  }
+
+  clearCreateImage(inputEl: HTMLInputElement) {
+    this.createImageFile = null;
+    this.createImagePreview = null;
+    inputEl.value = '';
   }
 
   saveCreate() {
-    console.log('🔴 saveCreate modelId =', this.createForm.modelId);
-
     this.errorMsg = '';
 
     const modelId = Number(this.createForm.modelId);
@@ -196,20 +248,45 @@ export class AdminProductsComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const payload = { modelId, colorId };
-    console.log('📦 payload:', payload);
 
-    this.api.createProduct(payload).subscribe({
+    // ✅ if no image => keep your old JSON create endpoint
+    if (!this.createImageFile) {
+      const payload = { modelId, colorId };
+
+      this.api.createProduct(payload).subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.showCreate = false;
+          this.msg = '✅ Product created';
+          this.loadProducts();
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.isLoading = false;
+          this.errorMsg = 'Create failed (maybe duplicate model+color)';
+        }
+      });
+
+      return;
+    }
+
+    // ✅ with image => multipart /products/with-image
+    const fd = new FormData();
+    fd.append('modelId', String(modelId));
+    fd.append('colorId', String(colorId));
+    fd.append('file', this.createImageFile);
+
+    this.api.createProductWithImage(fd).subscribe({
       next: () => {
         this.isLoading = false;
         this.showCreate = false;
-        this.msg = '✅ Product created';
+        this.msg = '✅ Product created with image';
         this.loadProducts();
       },
       error: (err: any) => {
         console.error(err);
         this.isLoading = false;
-        this.errorMsg = 'Create failed (maybe duplicate model+color)';
+        this.errorMsg = 'Create failed (maybe duplicate model+color or upload issue)';
       }
     });
   }
@@ -237,7 +314,7 @@ export class AdminProductsComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
+ this.isLoading = true;
 
     this.api.importStock({
       productId: this.importForm.productId,

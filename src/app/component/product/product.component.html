@@ -1,39 +1,62 @@
-   <div>
-    .
-   </div>
+<!-- ✅ product.component.html (FULL) -->
+<div class="shop-container">
+
+  <!-- ================= NAVBAR ================= -->
+  
+
   <!-- ================= SHOP VIEW ================= -->
   <main *ngIf="!isCheckoutMode; else checkoutView" class="page-fade">
-
+   <div>
+      <div class="toolbar">
+      
+       
+   </div>
     <!-- SEARCH -->
     <div class="toolbar">
-      <div class="search-box">
-        <span class="search-icon">🔍</span>
-        <input type="text"
-               [(ngModel)]="searchQuery"
-               placeholder="Search models..."
-               class="input-field" />
-      </div>
-      <div class="nav-right">
-      <button class="cart-btn"
-              type="button"
-              (click)="toggleCheckout()"
-              [class.active]="isCheckoutMode"
-              aria-label="Open cart">
-        <span class="bag-icon">👜</span>
-        <span class="bag-count" *ngIf="cartCount > 0">{{ cartCount }}</span>
-      </button>
-    </div>
+  <div class="toolbar-row">
+    <div class="search-box">
+      <span class="search-icon">🔎</span>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        placeholder="Search devices..."
+        class="input-field"
+        aria-label="Search devices" />
     </div>
 
-    <!-- ================= BRAND SCROLLER ================= -->
-    <section class="brand-wrap">
+    <button class="cart-btn" type="button" (click)="isCheckoutMode = true" aria-label="Open bag">
+      👜
+      <span class="bag-count" *ngIf="cartCount > 0">{{ cartCount }}</span>
+    </button>
+  </div>
+</div>
 
+
+
+
+ <!-- Banner -->
+<!-- Banner -->
+<div class="hero-slider" (mouseenter)="pauseBanner(true)" (mouseleave)="pauseBanner(false)">
+  <div class="slides" #slidesTrack>
+    <div class="slide"><img src="assets/banner.jpg" alt="Banner 1"></div>
+    <div class="slide"><img src="assets/banner2.jpg" alt="Banner 2"></div>
+    <div class="slide"><img src="assets/banner3.jpg" alt="Banner 3"></div>
+    <div class="slide"><img src="assets/banner5.jpg" alt="Banner 4"></div>
+    <div class="slide"><img src="assets/banner4.jpg" alt="Banner 5"></div>
+  </div>
+</div>
+
+     
+    </div>
+
+    <!-- BRANDS -->
+    <section class="brand-wrap" *ngIf="brands?.length">
       <div class="brand-head">
         <div class="brand-title">Brands</div>
 
         <div class="brand-nav">
-          <button class="brand-arrow" type="button" (click)="scrollBrand(-380)">‹</button>
-          <button class="brand-arrow" type="button" (click)="scrollBrand(380)">›</button>
+          <button class="brand-arrow" type="button" (click)="scrollBrand(-380)" aria-label="Scroll brands left">‹</button>
+          <button class="brand-arrow" type="button" (click)="scrollBrand(380)" aria-label="Scroll brands right">›</button>
         </div>
       </div>
 
@@ -41,11 +64,8 @@
         <div class="fade-left"></div>
         <div class="fade-right"></div>
 
-        <div class="brand-rail" #brandRail
-             (mouseenter)="pauseAutoBrand = true"
-             (mouseleave)="pauseAutoBrand = false">
-
-          <div class="brand-track" [class.pause]="pauseAutoBrand">
+        <div class="brand-rail" #brandRail>
+          <div class="brand-track">
 
             <!-- ALL -->
             <button type="button"
@@ -66,74 +86,100 @@
               <span class="brand-name">{{ b.name }}</span>
             </button>
 
-            <!-- Duplicate brands for seamless auto animation -->
-            <button type="button"
-                    *ngFor="let b of brands"
-                    class="brand-pill is-ghost"
-                    (click)="selectBrand(b.name)">
-              <span class="brand-letter">{{ (b.name || '?').charAt(0) }}</span>
-              <span class="brand-name">{{ b.name }}</span>
-            </button>
-
           </div>
         </div>
       </div>
-
     </section>
 
-    <!-- ================= PRODUCT GRID ================= -->
-    <div class="modern-grid" *ngIf="!isLoading && filteredProducts.length > 0">
-      
-      <div *ngFor="let p of filteredProducts; let i = index"
-           class="product-card"
-           [style.animation-delay]="i * 0.06 + 's'">
+    <!-- ================= PRODUCTS ================= -->
+    <!-- ================= PRODUCTS ================= -->
+<div class="grid2" *ngIf="!isLoading && filteredProducts.length > 0">
 
-        <div class="image-container">
-          <div class="bg-glow"></div>
+  <article *ngFor="let p of filteredProducts" class="p-card">
 
-          <img [src]="'assets/img/products/' + p.imagePath"
-               [alt]="p.name"
-               class="phone-img" />
+    <!-- TOP IMAGE -->
+    <div class="p-media">
 
-          <div class="badge"
-               *ngIf="p.availableUnit < 5"
-               [class.sold-out]="p.availableUnit === 0">
-            {{ p.availableUnit === 0 ? 'SOLD OUT' : 'ONLY ' + p.availableUnit + ' LEFT' }}
-          </div>
+      <!-- wishlist -->
+      <button class="p-heart"
+              type="button"
+              (click)="toggleWishlist(p)"
+              [class.on]="p.isWishlisted"
+              aria-label="Wishlist">
+        ♥
+      </button>
 
-          <!-- In-cart qty badge -->
-          <div class="incart-badge" *ngIf="getCartQty(p.id) > 0">
-            In bag: {{ getCartQty(p.id) }}
-          </div>
-        </div>
+      <!-- stock badge -->
+      <div class="p-stock"
+           [ngClass]="{
+             'in': p.availableUnit > 5,
+             'low': p.availableUnit > 0 && p.availableUnit <= 5,
+             'out': p.availableUnit === 0
+           }">
+        <ng-container *ngIf="p.availableUnit > 5">In Stock</ng-container>
+        <ng-container *ngIf="p.availableUnit > 0 && p.availableUnit <= 5">Limited Stock</ng-container>
+        <ng-container *ngIf="p.availableUnit === 0">Out of Stock</ng-container>
+      </div>
 
-        <div class="card-info">
-          <div class="info-top">
-            <span class="brand-tag">{{ p.brand || 'Flagship' }}</span>
-            <span class="dot" [style.background-color]="p.color"></span>
-          </div>
-
-          <h3 class="product-name">{{ p.name }}</h3>
-
-          <div class="card-footer">
-            <span class="price-val">{{ (p.salePrice || 0) | currency:'USD':'symbol':'1.0-0' }}</span>
-
-            <div class="action-btns">
-              <a class="btn-secondary" [routerLink]="['/product-details', p.id]">Details</a>
-
-              <button class="btn-primary"
-                      type="button"
-                      (click)="addToCart(p)"
-                      [disabled]="p.availableUnit === 0"
-                      [title]="p.availableUnit === 0 ? 'Out of stock' : 'Add to bag'">
-                +
-              </button>
-            </div>
-          </div>
-        </div>
-
+      <div class="p-frame">
+        <img class="p-img"
+             [src]="imgUrl(p)"
+             [alt]="p.name"
+             loading="lazy"
+             (error)="onImgError($event)" />
       </div>
     </div>
+
+    <!-- BODY -->
+    <div class="p-body">
+
+      <div class="p-title" [title]="p.name">{{ p.name }}</div>
+
+      <div class="p-meta">
+        <span class="p-brand">{{ p.brand || p.brandName || p.model?.brand?.name || '—' }}</span>
+
+        <span class="p-color" *ngIf="getColorName(p)">
+          <i class="p-dot" [style.backgroundColor]="getColorHex(p)"></i>
+          {{ getColorName(p) }}
+        </span>
+      </div>
+
+      <div class="p-row">
+        <div class="p-price">
+          {{ (p.salePrice || 0) | currency:'USD':'symbol':'1.0-0' }}
+        </div>
+
+        <div class="p-rate">
+          <span class="p-star">★</span>
+          <span class="p-rv">{{ getFakeRating(p).value }}</span>
+          <span class="p-rc">({{ getFakeRating(p).count }} reviews)</span>
+        </div>
+      </div>
+
+      <div class="p-actions">
+        <a class="p-details"
+           [routerLink]="['/product-details', (p.id ?? p.idProduct)]">
+          Details
+        </a>
+
+        <button class="p-add"
+                type="button"
+                (click)="addToCart(p)"
+                [disabled]="p.availableUnit === 0"
+                aria-label="Add to cart">
+          <span class="p-plus">+</span>
+        </button>
+      </div>
+
+      <div class="p-incart" *ngIf="getCartItemByProduct(p) as found">
+        In cart: <b>{{ found.qty }}</b>
+      </div>
+
+    </div>
+  </article>
+
+</div>
+
 
     <!-- LOADING -->
     <div class="loading-state" *ngIf="isLoading">
@@ -146,52 +192,75 @@
       <div class="empty-art">🔎</div>
       <p>No devices found matching your search.</p>
     </div>
-    
+
+    <!-- MOBILE CHECKOUT BAR -->
+    <div class="mobile-checkout-bar" *ngIf="cartCount > 0">
+      <div class="bar-left">
+        <div class="mini">{{ cartCount }} item(s) in bag</div>
+        <div class="amt">{{ getTotal() | currency:'USD':'symbol':'1.0-0' }}</div>
+      </div>
+
+      <button class="bar-btn"
+              type="button"
+              (click)="isCheckoutMode = true">
+        Checkout →
+      </button>
+    </div>
+
   </main>
 
-  <!-- ================= CHECKOUT ================= -->
+  <!-- ================= CHECKOUT VIEW ================= -->
   <ng-template #checkoutView>
-    <div class="checkout-wrapper page-fade">
+    <div class="checkout-wrapper">
+      <div class="checkout-card">
 
-      <div class="checkout-shell">
-
-        <!-- Left: items -->
-        <div class="checkout-card">
-          <div class="checkout-header">
-            <div>
-              <h2>Your Bag</h2>
-              <div class="mini-note" *ngIf="cartCount > 0">{{ cartCount }} item(s)</div>
-            </div>
-            <button class="btn-back" type="button" (click)="toggleCheckout()">Back to Shop</button>
+        <div class="checkout-header">
+          <div class="checkout-head-left">
+            <h2 class="checkout-title">Your Bag</h2>
+            <p class="checkout-sub">{{ cartCount }} item(s) • Review then confirm</p>
           </div>
 
-          <div class="cart-scroll-area" *ngIf="cart.length > 0; else emptyCart">
-            <div *ngFor="let item of cart" class="cart-row">
+          <button class="btn-back"
+                  type="button"
+                  (click)="isCheckoutMode = false">
+            ← Back
+          </button>
+        </div>
 
-              <div class="item-left">
-                <div class="item-img-box">
-                  <img [src]="'assets/img/products/' + item.imagePath" class="thumb-img" />
-                </div>
+        <div class="checkout-body">
 
-                <div class="item-text">
-                  <div class="name">{{ item.name }}</div>
-                  <div class="subline">
-                    <span class="brand">{{ item.brand }}</span>
-                    <span class="dot small" [style.background-color]="item.color"></span>
+          <!-- LEFT -->
+          <div class="cart-panel">
+            <div class="cart-scroll-area">
+
+              <div *ngFor="let item of cart" class="compact-cart-item">
+
+                <div class="item-left">
+                  <div class="item-img-box">
+                    <img [src]="imgUrl(item)"
+                         class="thumb-img"
+                         (error)="onImgError($event)"
+                         alt="thumb" />
+                  </div>
+
+                  <div class="item-text">
+                    <span class="name">{{ item.name }}</span>
+                    <span class="brand">{{ item.brand || '—' }}</span>
+
+                    <span class="c-color" *ngIf="item.colorName">
+                      <span class="c-dot" [style.backgroundColor]="item.colorHex"></span>
+                      {{ item.colorName }}
+                    </span>
                   </div>
                 </div>
-              </div>
 
-              <div class="item-mid">
-                <div class="price">{{ item.salePrice | currency:'USD':'symbol':'1.0-0' }}</div>
-
-                <div class="qty-stepper">
+                <div class="qty-ctrl">
                   <button type="button"
                           class="qty-btn"
                           (click)="decreaseQty(item)"
                           [disabled]="item.qty <= 1">−</button>
 
-                  <div class="qty-val">{{ item.qty }}</div>
+                  <span class="qty">{{ item.qty }}</span>
 
                   <button type="button"
                           class="qty-btn"
@@ -199,76 +268,74 @@
                           [disabled]="getAvailableForIncrease(item) <= 0">+</button>
                 </div>
 
-                <div class="small-note" *ngIf="getAvailableForIncrease(item) <= 0">
-                  Max reached
+                <div class="item-right">
+                  <span class="price">
+                    {{ (item.salePrice * item.qty) | currency:'USD':'symbol':'1.0-0' }}
+                  </span>
+
+                  <button class="remove-circle"
+                          type="button"
+                          (click)="removeItem(item)"
+                          aria-label="Remove item">✕</button>
                 </div>
+
               </div>
 
-              <div class="item-right">
-                <div class="line-total">
-                  {{ (item.salePrice * item.qty) | currency:'USD':'symbol':'1.0-0' }}
-                </div>
-                <button class="remove-circle" type="button" (click)="removeItem(item)">✕</button>
+              <div *ngIf="cart.length === 0" class="empty-cart">
+                Your bag is empty.
               </div>
 
             </div>
           </div>
 
-          <ng-template #emptyCart>
-            <div class="empty-cart">
-              <div class="empty-emoji">👜</div>
-              <div class="empty-title">Your bag is empty</div>
-              <div class="empty-sub">Add some devices to continue.</div>
-              <button class="btn-ghost" type="button" (click)="toggleCheckout()">Browse Shop</button>
+          <!-- RIGHT -->
+          <aside class="summary-panel" *ngIf="cart.length > 0">
+            <div class="summary-card">
+
+              <div class="summary-head">
+                <div class="s-title">Order Summary</div>
+                <div class="s-sub">Secure checkout</div>
+              </div>
+
+              <div class="summary-row">
+                <span>Items</span>
+                <span>{{ cartCount }}</span>
+              </div>
+
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <span>{{ getTotal() | currency:'USD':'symbol':'1.0-0' }}</span>
+              </div>
+
+              <div class="summary-row">
+                <span>Shipping</span>
+                <span class="free">Free</span>
+              </div>
+
+              <div class="summary-divider"></div>
+
+              <div class="summary-total">
+                <span>Total</span>
+                <span class="total-big">
+                  {{ getTotal() | currency:'USD':'symbol':'1.0-0' }}
+                </span>
+              </div>
+
+              <button class="btn-confirm"
+                      type="button"
+                      (click)="confirmCheckout()"
+                      [disabled]="isLoading">
+                {{ isLoading ? 'Processing...' : 'Confirm Order' }}
+              </button>
+
+              <div class="confirm-note">🔒 Secure checkout • Stock updates instantly</div>
             </div>
-          </ng-template>
+          </aside>
+
         </div>
-
-        <!-- Right: summary -->
-        <aside class="summary-card" [class.disabled]="cart.length === 0">
-          <div class="sum-head">
-            <div class="sum-title">Order Summary</div>
-            <div class="sum-sub">Secure checkout</div>
-          </div>
-
-          <div class="sum-lines" *ngIf="cart.length > 0">
-            <div class="sum-line">
-              <span>Items</span>
-              <span>{{ cartCount }}</span>
-            </div>
-            <div class="sum-line">
-              <span>Subtotal</span>
-              <span>{{ getTotal() | currency:'USD':'symbol':'1.0-0' }}</span>
-            </div>
-
-            <div class="sum-divider"></div>
-
-            <div class="sum-total">
-              <span>Total</span>
-              <span class="total-big">{{ getTotal() | currency:'USD':'symbol':'1.0-0' }}</span>
-            </div>
-
-            <button class="btn-confirm"
-                    type="button"
-                    (click)="confirmCheckout()"
-                    [disabled]="isLoading">
-              <span *ngIf="!isLoading">Confirm Order</span>
-              <span *ngIf="isLoading" class="btn-loading">
-                <span class="mini-spin"></span>
-                Processing...
-              </span>
-            </button>
-
-            <div class="secure-note">🔒 Your payment data stays safe.</div>
-          </div>
-
-          <div class="sum-empty" *ngIf="cart.length === 0">
-            Add items to see summary.
-          </div>
-        </aside>
 
       </div>
     </div>
   </ng-template>
 
-
+</div>

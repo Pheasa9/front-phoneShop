@@ -7,7 +7,6 @@
     <span class="blob b2"></span>
     <span class="blob b3"></span>
 
-    <!-- extra tiny sparkles -->
     <span class="spark s1"></span>
     <span class="spark s2"></span>
     <span class="spark s3"></span>
@@ -43,7 +42,7 @@
     <!-- Main grid -->
     <div class="db-grid">
 
-      <!-- LEFT: KPI cards + big chart -->
+      <!-- LEFT -->
       <div class="db-left">
 
         <!-- KPI cards -->
@@ -55,6 +54,7 @@
           >
             <div class="kpi-head">
               <div class="kpi-icon">{{ k.icon }}</div>
+
               <div class="kpi-meta">
                 <div class="kpi-title">{{ k.title }}</div>
                 <div class="kpi-sub">{{ k.note }}</div>
@@ -94,7 +94,6 @@
                 <span class="lg on"><i></i> Online</span>
               </div>
 
-              <!-- nicer fake chart -->
               <div class="gridlines"></div>
               <div class="pulse-orb"></div>
               <div class="fake-line"></div>
@@ -106,7 +105,7 @@
 
       </div>
 
-      <!-- RIGHT: Top Products table -->
+      <!-- RIGHT: Top Products -->
       <div class="db-right">
         <div class="card table-card" style="animation-delay: 480ms;">
           <div class="card-head">
@@ -123,32 +122,39 @@
             No sales for this date.
           </div>
 
-          <div *ngIf="(topProducts?.length || 0) > 0" class="tbl">
-            <div class="tbl-head">
+          <!-- iOS grouped list -->
+          <div *ngIf="(topProducts?.length || 0) > 0" class="ios-list">
+            <div class="ios-list-head">
               <span>#</span>
               <span>Product</span>
               <span>Popularity</span>
               <span class="right">Sales</span>
             </div>
 
-            <div
-              class="tbl-row"
-              *ngFor="let p of topProducts; let i=index"
-              [style.animationDelay.ms]="i * 70"
-            >
-              <span class="muted">{{ i + 1 }}</span>
-              <span class="strong">{{ p.name }}</span>
+            <div class="ios-group">
+              <div
+                class="ios-row"
+                *ngFor="let p of topProducts; let i=index"
+                [style.animationDelay.ms]="i * 70"
+              >
+                <span class="muted">{{ i + 1 }}</span>
 
-              <span class="popcell">
-                <div class="pbar">
-                  <div class="pfill" [style.width.%]="p.popularity"></div>
-                </div>
-                <small>{{ p.popularity }}%</small>
-              </span>
+                <span class="strong">
+                  {{ p.name }}
+                </span>
 
-              <span class="right pill">${{ p.sales | number }}</span>
+                <span class="popcell">
+                  <div class="pbar">
+                    <div class="pfill" [style.width.%]="p.popularity"></div>
+                  </div>
+                  <small>{{ p.popularity }}%</small>
+                </span>
+
+                <span class="right pill">${{ p.sales | number }}</span>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -218,9 +224,11 @@
             <span class="muted">Service Level</span>
             <b>{{ vm?.onTimeRate || 0 }}%</b>
           </div>
+
           <div class="vslbar">
             <div class="vslfill" [style.width.%]="(vm?.onTimeRate || 0)"></div>
           </div>
+
           <small class="muted">Add timestamps to calculate real service level.</small>
         </div>
       </div>

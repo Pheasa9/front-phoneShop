@@ -60,4 +60,10 @@ export class ProductService {
   cancelSale(saleId: number): Observable<any> {
     return this.http.put(`${this.API}/sales/${saleId}/cancel`, {});
   }
+
+
+  getColors(){
+  return this.http.get<any[]>(`${this.API}/colors`);
+}
+
 }
