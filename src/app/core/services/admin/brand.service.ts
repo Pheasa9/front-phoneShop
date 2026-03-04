@@ -8,8 +8,8 @@ export interface BrandDto {
 
 @Injectable({ providedIn: 'root' })
 export class BrandAdminService {
-  private baseUrl = 'https://carproject-t9tv.onrender.com/brands';
-   private baseUrl2 = 'https://carproject-t9tv.onrender.com';
+  private baseUrl = 'http://carproject-t9tv.onrender.com/brands';
+   private baseUrl2 = 'http://carproject-t9tv.onrender.com';
 
   constructor(private http: HttpClient) {}
 

@@ -9,7 +9,7 @@ export interface ModelDto {
 
 @Injectable({ providedIn: 'root' })
 export class ModelAdminService {
-  private baseUrl = 'https://carproject-t9tv.onrender.com/models';
+  private baseUrl = 'http://carproject-t9tv.onrender.com/models';
 
   constructor(private http: HttpClient) {}
 

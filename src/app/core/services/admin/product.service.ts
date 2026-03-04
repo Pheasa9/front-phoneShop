@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ProductAdminService {
-  private baseUrl = 'https://carproject-t9tv.onrender.com/products';
+  private baseUrl = 'http://carproject-t9tv.onrender.com/products';
 
   constructor(private http: HttpClient) {}
 

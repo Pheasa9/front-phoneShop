@@ -28,7 +28,7 @@ type CartItem = {
 })
 export class ProductComponent implements OnInit, OnDestroy {
 
-  readonly API_BASE = 'https://carproject-t9tv.onrender.com';
+  readonly API_BASE = 'http://carproject-t9tv.onrender.com';
   readonly Math = Math;  // expose to template
 
   products: any[] = [];

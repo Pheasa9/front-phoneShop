@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ContactComponent {
 
-  private readonly API = 'https://carproject-t9tv.onrender.com';
+  private readonly API = 'http://carproject-t9tv.onrender.com';
 
   // Form Data
   contactData = {
