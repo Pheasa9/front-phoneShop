@@ -24,7 +24,7 @@ type CartItem = {
 })
 export class ProductComponent implements OnInit, OnDestroy {
 
-  readonly API_BASE = 'http://localhost:8080';
+  readonly API_BASE = 'http://carproject-t9tv.onrender.com';
 
   products: any[] = [];
   brands: any[] = [];

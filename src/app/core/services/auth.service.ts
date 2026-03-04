@@ -5,7 +5,7 @@ import { Observable, tap } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   // Ensure this URL exactly matches your Spring Boot @PostMapping
-  private apiUrl = 'http://localhost:8080'; 
+  private apiUrl = 'http://carproject-t9tv.onrender.com'; 
 
   constructor(private http: HttpClient) {}
 

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class BrandService {
   // Matches your Spring Security requestMatcher("/brands")
-  private apiUrl = 'http://localhost:8080/brands';
+  private apiUrl = 'http://carproject-t9tv.onrender.com/brands';
 
   constructor(private http: HttpClient) {}
 

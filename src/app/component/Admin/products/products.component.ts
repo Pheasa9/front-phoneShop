@@ -17,7 +17,7 @@ import { ProductAdminService } from '../../../core/services/admin/product.servic
 export class AdminProductsComponent implements OnInit {
 
   // ✅ backend base (for showing images from /uploads/**)
-  readonly API_BASE = 'http://localhost:8080';
+  readonly API_BASE = 'http://carproject-t9tv.onrender.com';
 
   products: any[] = [];
   brands: any[] = [];

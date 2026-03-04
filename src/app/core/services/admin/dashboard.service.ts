@@ -21,7 +21,7 @@ export interface TodayDashboardVm {
 export class DashboardService {
 
   // ✅ point to Spring Boot
-  private baseUrl = 'http://localhost:8080/api/admin/dashboard';
+  private baseUrl = 'http://carproject-t9tv.onrender.com/api/admin/dashboard';
 
   constructor(private http: HttpClient) {}
 

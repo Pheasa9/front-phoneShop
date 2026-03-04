@@ -35,7 +35,7 @@ export class ProdcutDetailComponent implements OnInit {
   errorMsg = '';
   details?: ProductDetailsDto;
 
-  private baseUrl = 'http://localhost:8080';
+  private baseUrl = 'http://carproject-t9tv.onrender.com';
 
   constructor(
     private route: ActivatedRoute,
