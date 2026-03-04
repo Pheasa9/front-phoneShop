@@ -1,42 +1,66 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { BrandService } from '../../services/brand.service';
 
 @Component({
   selector: 'app-brands',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './brands.component.html',
   styleUrls: ['./brands.component.css']
 })
 export class BrandsComponent implements OnInit {
-handleImageError($event: ErrorEvent) {
-throw new Error('Method not implemented.');
-}
   brands: any[] = [];
+  loading = true;
+
+  // Classification lists (lowercase)
+  private readonly TOP_NAMES = ['apple', 'samsung', 'google', 'oneplus'];
+  private readonly REC_NAMES = ['xiaomi', 'oppo', 'vivo', 'realme', 'nothing', 'huawei'];
 
   constructor(private brandService: BrandService, private router: Router) {}
 
   ngOnInit(): void {
     this.brandService.getBrands().subscribe({
       next: (res: any) => {
-        // Assuming the backend returns brands in res.list
         if (res && res.list && Array.isArray(res.list)) {
           this.brands = res.list;
-          console.log('Brands loaded:', this.brands);
         } else if (Array.isArray(res)) {
           this.brands = res;
-        } else {
-          console.error('Unexpected format from brand service:', res);
         }
+        this.loading = false;
       },
-      error: (err) => console.error('HTTP Error:', err)
+      error: () => {
+        this.loading = false;
+      }
     });
   }
 
-  viewProducts(brandId: number) {
-  // Use 'products' to match your routes file
-  this.router.navigate(['/products'], { queryParams: { brandId: brandId } });
-}
+  get topBrands(): any[] {
+    return this.brands.filter(b => this.TOP_NAMES.includes(b.name.toLowerCase()));
+  }
+
+  get recommendedBrands(): any[] {
+    return this.brands.filter(b => this.REC_NAMES.includes(b.name.toLowerCase()));
+  }
+
+  get regularBrands(): any[] {
+    const special = [...this.TOP_NAMES, ...this.REC_NAMES];
+    return this.brands.filter(b => !special.includes(b.name.toLowerCase()));
+  }
+
+  brandImg(name: string): string {
+    return 'assets/img/brands/' + name.toLowerCase() + '.png';
+  }
+
+  handleImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    const fallback = img.nextElementSibling as HTMLElement;
+    if (fallback) fallback.style.display = 'grid';
+  }
+
+  viewProducts(brandId: number): void {
+    this.router.navigate(['/products'], { queryParams: { brandId } });
+  }
 }

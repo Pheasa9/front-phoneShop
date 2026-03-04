@@ -59,22 +59,54 @@
                 <span class="focus-border"></span>
               </div>
               <div class="col-md-12 field-wrap">
-                <input type="email" name="em" [(ngModel)]="contactData.emailId" required placeholder="Your Email Address">
+                <input type="email" name="em" [(ngModel)]="contactData.emailId" required placeholder="Your Email Address"
+                       [readonly]="isEmailVerified">
                 <span class="focus-border"></span>
+
+                <!-- Email verify flow -->
+                <div class="verify-section" *ngIf="!isEmailVerified">
+                  <!-- Send Code button -->
+                  <button type="button" class="btn-verify-send"
+                          (click)="sendVerificationCode()"
+                          [disabled]="isSendingCode || !contactData.emailId">
+                    <span *ngIf="!isSendingCode && !codeSentTo">Send Code</span>
+                    <span *ngIf="isSendingCode">Sending...</span>
+                    <span *ngIf="!isSendingCode && codeSentTo">Resend Code</span>
+                  </button>
+
+                  <!-- Code input (shows after code sent) -->
+                  <div class="code-input-row" *ngIf="codeSentTo">
+                    <span class="code-hint">Code sent to {{ codeSentTo }}</span>
+                    <div class="code-verify-row">
+                      <input type="text" [(ngModel)]="userCode" name="otp"
+                             placeholder="Enter 6-digit code" maxlength="6"
+                             class="code-input">
+                      <button type="button" class="btn-verify-check"
+                              (click)="verifyEmail()"
+                              [disabled]="userCode.length < 6">
+                        Verify
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="code-error" *ngIf="codeError">{{ codeError }}</div>
+                </div>
+
+                <!-- Verified badge -->
+                <div class="verified-badge" *ngIf="isEmailVerified">
+                  <i class="bi bi-check-circle-fill"></i> Email verified
+                </div>
               </div>
+
               <div class="col-md-12 field-wrap">
-                <textarea name="msg" [(ngModel)]="contactData.message" rows="4" required placeholder="Tell us about your project..."></textarea>
+                <textarea name="msg" [(ngModel)]="contactData.message" rows="4" required placeholder="Tell us about your project..."
+                          [readonly]="!isEmailVerified"></textarea>
                 <span class="focus-border"></span>
               </div>
             </div>
 
             <div class="submit-section">
-              <div class="captcha-pill">
-                <code>p s t 8 s</code>
-                <input type="text" name="cap" [(ngModel)]="contactData.captchaInput" placeholder="Verify" required>
-              </div>
-              
-              <button type="submit" [disabled]="f.invalid || isSending" class="btn-gradient">
+              <button type="submit" [disabled]="f.invalid || isSending || !isEmailVerified" class="btn-gradient">
                 <span *ngIf="!isSending">Send Message <i class="bi bi-arrow-right-short"></i></span>
                 <span *ngIf="isSending">Processing... <span class="loader"></span></span>
               </button>

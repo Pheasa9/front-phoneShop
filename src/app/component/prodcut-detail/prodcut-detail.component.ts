@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Product } from '../../../models/product.model';
 import { CartService } from '../../services/cart.service';
 
@@ -26,7 +26,7 @@ interface ProductDetailsDto {
 @Component({
   selector: 'app-prodcut-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, HttpClientModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './prodcut-detail.component.html',
   styleUrls: ['./prodcut-detail.component.css']
 })
@@ -59,10 +59,23 @@ export class ProdcutDetailComponent implements OnInit {
       });
   }
 
+  addedToCart = false;
+
   back() {
     this.router.navigate(['/products']);
   }
 
-  // ✅ Add to cart using your existing CartService
- 
+  addToCart(): void {
+    if (!this.details || this.details.availableUnit === 0) return;
+    const product = {
+      id: this.details.productId,
+      name: this.details.productName,
+      salePrice: this.details.salePrice,
+      imagePath: this.details.imagePath || '',
+      availableUnit: this.details.availableUnit
+    };
+    this.cartService.addToCart(product as any);
+    this.addedToCart = true;
+    setTimeout(() => this.addedToCart = false, 1800);
+  }
 }

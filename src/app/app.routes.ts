@@ -17,6 +17,9 @@ import { AdminProductDetailsComponent } from './component/Admin/product-details/
 import { AdminSalesComponent } from './component/Admin/sales-report/sales.component';
 import { AdminUsersComponent } from './component/Admin/users/users.component';
 import { AdminDashboardComponent } from './component/Admin/dashboard/dashboard.component';
+import { NotificationsComponent } from './component/Admin/notifications/notifications.component';
+import { WishlistComponent } from './component/wishlist/wishlist.component';
+import { OrdersComponent } from './component/orders/orders.component';
 
 
 export const routes: Routes = [
@@ -28,6 +31,8 @@ export const routes: Routes = [
        { path: 'home', component: HomeComponent },
          { path: 'contact', component:ContactComponent  },
           { path: 'product-details/:id', component: ProdcutDetailComponent },
+          { path: 'wishlist', component: WishlistComponent },
+          { path: 'orders', component: OrdersComponent },
          
 
             
@@ -44,7 +49,10 @@ export const routes: Routes = [
      { path: 'product-details/:id', component: AdminProductDetailsComponent },
     { path: 'sales', component: AdminSalesComponent },
     { path: 'users', component: AdminUsersComponent },
-    { path: '', redirectTo: 'dashboard', pathMatch: 'full' } // start here
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' } ,
+    // start here
+
+    { path: 'notifications', component: NotificationsComponent }
   ]
 },
 

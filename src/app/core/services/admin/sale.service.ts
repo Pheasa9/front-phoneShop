@@ -16,8 +16,8 @@ export type SaleRowAny = any;
 
 @Injectable({ providedIn: 'root' })
 export class ReportService {
-  private readonly baseUrl = 'http://carproject-t9tv.onrender.com/reports';
-  private readonly baseUrl2 = 'http://carproject-t9tv.onrender.com/sales';
+  private readonly baseUrl = 'https://carproject-t9tv.onrender.com/reports';
+  private readonly baseUrl2 = 'https://carproject-t9tv.onrender.com/sales';
 
   constructor(private http: HttpClient) {}
 

@@ -5,7 +5,7 @@ import { Observable, tap } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   // Ensure this URL exactly matches your Spring Boot @PostMapping
-  private apiUrl = 'http://carproject-t9tv.onrender.com'; 
+  private apiUrl = 'https://carproject-t9tv.onrender.com'; 
 
   constructor(private http: HttpClient) {}
 
@@ -93,8 +93,6 @@ isSale(): boolean {
 
 public logout(): void {
   localStorage.removeItem('jwtToken');
-  localStorage.removeItem('jwtToken'); // (safe duplicate)
-  localStorage.clear();                // clears everything
-  sessionStorage.clear();              // if you used session storage anywhere
+  sessionStorage.clear();
 }
 }

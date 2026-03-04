@@ -28,6 +28,7 @@ export class AdminDashboardComponent implements OnInit {
 
   kpis: Array<{ title: string; value: string; note: string; icon: string; tone: string }> = [];
   topProducts: Array<{ name: string; popularity: number; sales: number }> = [];
+  leastProducts: Array<{ name: string; popularity: number; sales: number }> = [];
 
   ngOnInit(): void {
     if (!this.auth.getToken() || !this.auth.isAdmin()) {
@@ -60,7 +61,7 @@ export class AdminDashboardComponent implements OnInit {
         value: `$${totalSales.toLocaleString()}`,
         note: `Date (${day})`,
         icon: '💳',
-        tone: 'purple'
+        tone: 'blue'
       },
       {
         title: 'Total Unit',
@@ -75,6 +76,13 @@ export class AdminDashboardComponent implements OnInit {
         note: `Volume`,
         icon: '📦',
         tone: 'green'
+      },
+      {
+        title: 'Expense',
+        value: `$${Math.round(totalSales * 0.35).toLocaleString()}`,
+        note: `~35% of sales`,
+        icon: '📉',
+        tone: 'purple'
       }
     ];
 
@@ -83,6 +91,14 @@ export class AdminDashboardComponent implements OnInit {
       popularity: Number(p.popularity ?? 0),
       sales: Number(p.sales ?? 0)
     }));
+
+    // Least selling = sorted by sales ascending, take bottom 5
+    const allProducts = (vm.topProducts ?? []).map((p: any) => ({
+      name: p.name,
+      popularity: Number(p.popularity ?? 0),
+      sales: Number(p.sales ?? 0)
+    }));
+    this.leastProducts = [...allProducts].sort((a, b) => a.sales - b.sales).slice(0, 3);
   }
 
 onBtnMove(e: MouseEvent) {

@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from './product.service';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { WishlistService } from '../../services/wishlist.service';
+import { CartUiService } from '../../services/cart-ui.service';
+import { CartService } from '../../services/cart.service';
+import { PurchaseHistoryService } from '../../services/purchase-history.service';
 
 type CartItem = {
   id: number;
@@ -24,7 +28,8 @@ type CartItem = {
 })
 export class ProductComponent implements OnInit, OnDestroy {
 
-  readonly API_BASE = 'http://carproject-t9tv.onrender.com';
+  readonly API_BASE = 'https://carproject-t9tv.onrender.com';
+  readonly Math = Math;  // expose to template
 
   products: any[] = [];
   brands: any[] = [];
@@ -35,11 +40,16 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   // ✅ colors map: colorId -> {name, hex}
   colorMap = new Map<number, { name: string; hex: string }>();
-
+  receiptOpen: boolean = false;
+receipt: any = null;
   selectedBrandName: string = 'all';
   searchQuery: string = '';
   isLoading: boolean = false;
   isCheckoutMode: boolean = false;
+
+  // ================= PAGINATION =================
+  currentPage: number = 0;
+  pageSize: number = 10;
 
   pauseAutoBrand: boolean = false;
 
@@ -56,12 +66,23 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   constructor(
     private productService: ProductService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private wishlistService: WishlistService,
+    private cartUi: CartUiService,
+    private cartService: CartService,
+    private purchaseHistory: PurchaseHistoryService
   ) {}
 
   ngOnInit(): void {
     this.loadColors();   // ✅ build colors + colorMap
     this.loadData();     // ✅ load brands + products
+    this.syncCartFromService(); // ✅ load persisted cart items
+
+    // ✅ listen for cart open signal from navbar
+    this.cartUi.onOpenCart.subscribe(() => {
+      this.syncCartFromService();
+      this.isCheckoutMode = true;
+    });
 
     // ✅ start banner after view is ready
     setTimeout(() => this.startBannerAuto(), 0);
@@ -250,6 +271,7 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   onBrandChange() {
     this.isLoading = true;
+    this.currentPage = 0;
 
     const nameToFilter =
       this.selectedBrandName === 'all' ? '' : this.selectedBrandName;
@@ -257,6 +279,10 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.productService.getProductsFiltered(nameToFilter).subscribe({
       next: (res: any) => {
         this.products = Array.isArray(res) ? res : [];
+        // Restore wishlist state from localStorage
+        for (const p of this.products) {
+          p.isWishlisted = this.wishlistService.isWishlisted(p.id ?? p.productId);
+        }
         this.isLoading = false;
       },
       error: () => {
@@ -264,6 +290,36 @@ export class ProductComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     });
+  }
+
+  goToPage(page: number) {
+    if (page < 0 || page >= this.totalPages || page === this.currentPage) return;
+    this.currentPage = page;
+  }
+
+  get totalPages(): number {
+    const total = this.filteredProducts.length;
+    return Math.ceil(total / this.pageSize);
+  }
+
+  get totalElements(): number {
+    return this.filteredProducts.length;
+  }
+
+  get pageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxVisible = 5;
+    let start = Math.max(0, this.currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(this.totalPages, start + maxVisible);
+
+    if (end - start < maxVisible) {
+      start = Math.max(0, end - maxVisible);
+    }
+
+    for (let i = start; i < end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
   // ================= SEARCH =================
@@ -274,9 +330,48 @@ export class ProductComponent implements OnInit, OnDestroy {
     return list.filter(p => (p.name || '').toLowerCase().includes(query));
   }
 
+  // ================= PAGINATED VIEW =================
+  get paginatedProducts(): any[] {
+    const start = this.currentPage * this.pageSize;
+    return this.filteredProducts.slice(start, start + this.pageSize);
+  }
+
   // ================= CART =================
+
+  /** Sync local cart array from CartService (localStorage) */
+  syncCartFromService(): void {
+    const serviceCart = this.cartService.getCart();
+    this.cart = serviceCart.map(ci => ({
+      id: ci.product.id,
+      name: ci.product.name,
+      brand: (ci.product as any).brand?.name || (ci.product as any).brandName || '',
+      colorName: (ci.product as any).colorName || '',
+      colorHex: (ci.product as any).colorHex || '',
+      imagePath: ci.product.imagePath,
+      salePrice: ci.product.salePrice,
+      qty: ci.quantity
+    }));
+  }
+
+  /** Persist local cart back to CartService */
+  private persistCart(): void {
+    this.cartService.clearCart();
+    for (const item of this.cart) {
+      const product = {
+        id: item.id,
+        name: item.name,
+        salePrice: item.salePrice,
+        imagePath: item.imagePath || '',
+        availableUnit: 999
+      } as any;
+      for (let i = 0; i < item.qty; i++) {
+        this.cartService.addToCart(product);
+      }
+    }
+  }
+
   get cartCount(): number {
-    return this.cart.reduce((sum, it) => sum + (it.qty || 0), 0);
+    return this.cartService.getCartCount();
   }
 
   addToCart(p: any) {
@@ -309,6 +404,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     };
 
     this.cart = [...this.cart, item];
+    this.persistCart();
   }
 
   increaseQty(item: CartItem) {
@@ -318,6 +414,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     original.availableUnit--;
     item.qty++;
     this.cart = [...this.cart];
+    this.persistCart();
   }
 
   decreaseQty(item: CartItem) {
@@ -328,12 +425,14 @@ export class ProductComponent implements OnInit, OnDestroy {
 
     item.qty--;
     this.cart = [...this.cart];
+    this.persistCart();
   }
 
   removeItem(item: CartItem) {
     const original = this.products.find(x => Number(x.id ?? x.idProduct) === item.id);
     if (original) original.availableUnit += item.qty;
     this.cart = this.cart.filter(c => c.id !== item.id);
+    this.persistCart();
   }
 
   getTotal(): number {
@@ -355,34 +454,54 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   toggleWishlist(p: any){
-    p.isWishlisted = !p.isWishlisted;
+    p.isWishlisted = this.wishlistService.toggle(p);
   }
 
   // ================= CHECKOUT =================
   confirmCheckout() {
-    if (this.cart.length === 0) return;
+  if (this.cart.length === 0) return;
 
-    const productsList = this.cart.map(item => ({
-      productId: item.id,
-      unit: item.qty
-    }));
+  const productsList = this.cart.map(item => ({
+    productId: item.id,
+    unit: item.qty
+  }));
 
-    const saleDto = {
-      products: productsList,
-      soldDate: new Date().toISOString()
-    };
+  const saleDto = {
+    products: productsList,
+    soldDate: new Date().toISOString()
+  };
 
-    this.isLoading = true;
+  this.isLoading = true;
 
-    this.productService.checkout(saleDto).subscribe({
-      next: () => {
-        this.cart = [];
-        alert('Checkout Successful!');
-        window.location.reload();
-      },
-      error: () => {
-        this.isLoading = false;
-      }
-    });
+  this.productService.checkout(saleDto).subscribe({
+    next: (res: any) => {
+      // ✅ backend now returns receipt {saleId, soldDate, items, total}
+      this.isLoading = false;
+
+      this.receipt = res;
+      this.receiptOpen = true;
+
+      // ✅ Save to purchase history
+      this.purchaseHistory.addFromReceipt(res);
+
+      // ✅ keep your logic: clear cart on success
+      this.cart = [];
+      this.cartService.clearCart();
+
+      // ✅ optional: go back to shop view after buying
+      this.isCheckoutMode = false;
+
+      // ❌ IMPORTANT: remove reload, or receipt will disappear
+      // window.location.reload();
+    },
+    error: () => {
+      this.isLoading = false;
+    }
+  });
+}
+
+
+ printReceipt() {
+    window.print();
   }
 }

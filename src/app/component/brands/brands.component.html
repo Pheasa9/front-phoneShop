@@ -1,40 +1,96 @@
-<div class="brands-wrapper fade-in">
-  <header class="brands-header">
-    <div class="header-content">
-      <span class="subtitle">Premium Selection</span>
-      <h2>Explore by Brand</h2>
-      <p>Select a manufacturer to view their latest mobile devices.</p>
-    </div>
-  </header>
+<div class="bp">
 
-  <main class="brands-container">
-    <div class="brand-grid" *ngIf="brands.length > 0; else noBrands">
-      <div class="brand-card" *ngFor="let brand of brands" (click)="viewProducts(brand.id)">
-        
-        <div class="logo-box">
-          <img [src]="'assets/img/brand/' + brand.name.toLowerCase() + '.png'" 
-               [alt]="brand.name"
-               class="brand-img"
-               (error)="handleImageError($event)">
-        </div>
+  <!-- ── Header ── -->
+  <div class="bp-header">
+    <h1>Brands</h1>
+    <p>{{ brands.length }} manufacturers</p>
+  </div>
 
-        <div class="brand-details">
-          <h3>{{ brand.name }}</h3>
-          <span class="explore-link">
-            Browse Collection 
-            <i class="arrow-icon">→</i>
-          </span>
-        </div>
+  <!-- Loading -->
+  <div class="body" *ngIf="loading">
+    <div class="sk-row"><div class="sk lg" *ngFor="let x of [1,2,3,4]"></div></div>
+    <div class="sk-row"><div class="sk" *ngFor="let x of [1,2,3,4,5,6]"></div></div>
+  </div>
 
+  <!-- Content -->
+  <div class="body" *ngIf="!loading && brands.length > 0">
+
+    <!-- ★ TOP BRANDS -->
+    <section class="sec" *ngIf="topBrands.length > 0">
+      <div class="sec-head">
+        <h2>Top Brands</h2>
+        <div class="sec-line"></div>
       </div>
-    </div>
-
-    <ng-template #noBrands>
-      <div class="empty-container">
-        <div class="empty-icon">📂</div>
-        <h3>No Brands Found</h3>
-        <p>We couldn't find any brands in the catalog right now.</p>
+      <div class="top-grid">
+        <div class="top-card"
+             *ngFor="let b of topBrands; let i = index"
+             [style.animation-delay]="(i * 0.08) + 's'"
+             (click)="viewProducts(b.id)">
+          <div class="top-rank">{{ i + 1 }}</div>
+          <div class="top-logo">
+            <img [src]="brandImg(b.name)" [alt]="b.name" (error)="handleImageError($event)" />
+            <div class="fb" style="display:none">{{ b.name.charAt(0) }}</div>
+          </div>
+          <div class="top-info">
+            <h3>{{ b.name }}</h3>
+            <span class="tag">Premium</span>
+          </div>
+          <i class="bi bi-arrow-right top-arr"></i>
+        </div>
       </div>
-    </ng-template>
-  </main>
+    </section>
+
+    <!-- ♦ RECOMMENDED -->
+    <section class="sec" *ngIf="recommendedBrands.length > 0">
+      <div class="sec-head">
+        <h2>Recommended</h2>
+        <div class="sec-line"></div>
+        <span class="sec-count">{{ recommendedBrands.length }}</span>
+      </div>
+      <div class="rec-grid">
+        <div class="rec-card"
+             *ngFor="let b of recommendedBrands; let i = index"
+             [style.animation-delay]="(i * 0.06) + 's'"
+             (click)="viewProducts(b.id)">
+          <div class="rec-logo">
+            <img [src]="brandImg(b.name)" [alt]="b.name" (error)="handleImageError($event)" />
+            <div class="fb" style="display:none">{{ b.name.charAt(0) }}</div>
+          </div>
+          <h3>{{ b.name }}</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- ● MORE BRANDS -->
+    <section class="sec" *ngIf="regularBrands.length > 0">
+      <div class="sec-head">
+        <h2>More Brands</h2>
+        <div class="sec-line"></div>
+        <span class="sec-count">{{ regularBrands.length }}</span>
+      </div>
+      <div class="more-grid">
+        <div class="more-row"
+             *ngFor="let b of regularBrands; let i = index"
+             [style.animation-delay]="(i * 0.04) + 's'"
+             (click)="viewProducts(b.id)">
+          <div class="more-logo">
+            <img [src]="brandImg(b.name)" [alt]="b.name" (error)="handleImageError($event)" />
+            <div class="fb sm" style="display:none">{{ b.name.charAt(0) }}</div>
+          </div>
+          <span class="more-name">{{ b.name }}</span>
+          <i class="bi bi-chevron-right more-arr"></i>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Empty -->
+  <div class="bp-empty" *ngIf="!loading && brands.length === 0">
+    <i class="bi bi-shop"></i>
+    <h3>No Brands Yet</h3>
+    <p>Check back soon for our brand catalogue</p>
+    <a routerLink="/products" class="em-btn">Browse Products</a>
+  </div>
+
 </div>

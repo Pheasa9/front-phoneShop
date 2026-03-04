@@ -1,13 +1,92 @@
-<!-- ✅ ADMIN: show ONLY admin routes (AdminLayout will render) -->
+<div class="star-layer" aria-hidden="true">
+  <span
+    class="star"
+    *ngFor="let s of stars"
+    [style.top.%]="s.top"
+    [style.left.%]="s.left"
+    [style.animationDelay.s]="s.delay"
+    [style.animationDuration.s]="s.duration"
+    [style.width.px]="s.size"
+    [style.height.px]="s.size"
+  ></span>
+</div>
+
+
+
+
+<!-- 🤖 GLOBAL ROBOT OVERLAY -->
+<div *ngIf="showRobot"
+     class="robot"
+     [class.flip]="robot.flip"
+     [class.jump]="robot.jump"
+     [style.left.px]="robot.x"
+     [style.top.px]="robot.y"
+     (click)="robotClick()">
+
+  <!-- 💬 Speech Bubble -->
+  <div class="speech" *ngIf="robot.message">
+    {{ robot.message }}
+  </div>
+
+  <div class="antenna">
+    <span class="ball"></span>
+  </div>
+
+  <div class="head">
+    <div class="eye"></div>
+    <div class="eye"></div>
+    <div class="mouth"></div>
+  </div>
+
+  <div class="body"></div>
+
+  <div class="legs">
+    <span class="leg l1"></span>
+    <span class="leg l2"></span>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ADMIN -->
 <router-outlet *ngIf="isAdminRoute"></router-outlet>
 
-<!-- ✅ PUBLIC: show your current layout -->
-<div *ngIf="!isAdminRoute">
+<!-- PUBLIC -->
+<div *ngIf="!isAdminRoute" class="app-shell">
 
+  <!-- BACKGROUND VIDEO -->
+  <!-- <div >
+    <video class="bg-video" autoplay muted loop playsinline preload="auto">
+      <source src="assets/bg.mp4" type="video/mp4" />
+    </video>
+
+    Overlay to make text readable -->
+    <!-- <div class="bg-overlay"></div> -->
+
+    <!-- Optional blur glass glow -->
+    <!-- <div class="bg-glow"></div>
+  </div> -->
+
+  <!-- TOP BAR -->
   <div class="top-bar d-none d-md-block bg-dark py-2">
     <div class="container d-flex justify-content-between align-items-center">
       <div class="top-info small text-white-50">
-        <span class="me-4"><i class="bi bi-envelope me-2 text-warning"></i> support&#64;smos-phone.com</span>
+        <span class="me-4">
+          <i class="bi bi-envelope me-2 text-warning"></i>
+          support&#64;smos-phone.com
+        </span>
         <span><i class="bi bi-geo-alt me-2 text-warning"></i> 123 Tech Street, Digital City</span>
       </div>
       <div class="top-links small">
@@ -16,7 +95,8 @@
     </div>
   </div>
 
-  <header class="bg-white sticky-top shadow-sm main-header">
+  <!-- HEADER -->
+  <header class="main-header sticky-top">
     <div class="container">
       <nav class="navbar navbar-expand-lg navbar-light py-3">
         <a class="navbar-brand fw-black fs-2" routerLink="/">
@@ -30,89 +110,46 @@
         <div class="collapse navbar-collapse" id="mainNav">
           <ul class="navbar-nav mx-auto gap-lg-4 fw-bold small">
             <li class="nav-item">
-              <a class="nav-link text-uppercase" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+              <a class="nav-link text-uppercase" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+                Home
+              </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link text-uppercase" routerLink="/products" routerLinkActive="active">Products</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-uppercase" routerLink="/brands" routerLinkActive="active">Brands</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-uppercase" routerLink="/about" routerLinkActive="active">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-uppercase" routerLink="/contact" routerLinkActive="active">Contact</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-uppercase" routerLink="/profile" routerLinkActive="active">Profile</a>
-            </li>
+            <li class="nav-item"><a class="nav-link text-uppercase" routerLink="/products" routerLinkActive="active">Products</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" routerLink="/brands" routerLinkActive="active">Brands</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" routerLink="/about" routerLinkActive="active">About</a></li>
+            <li class="nav-item"><a class="nav-link text-uppercase" routerLink="/profile" routerLinkActive="active">Profile</a></li>
           </ul>
 
-          <div class="nav-actions d-flex align-items-center gap-4">
-            <div class="search-box d-none d-xl-flex align-items-center">
-              <input type="text" placeholder="Search..." class="form-control form-control-sm rounded-pill px-3 border-1 shadow-none">
-              <i class="bi bi-search ms-n4 text-muted"></i>
-            </div>
+          <div class="nav-actions d-flex align-items-center gap-3">
 
-            <a routerLink="/profile" class="text-dark text-decoration-none hover-warning" title="My Account">
+            <a (click)="openCart()" class="icon-pill position-relative" title="Cart" style="cursor:pointer">
+              <i class="bi bi-bag fs-5"></i>
+              <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
+            </a>
+
+            <a routerLink="/profile" class="icon-pill" title="My Account">
               <i class="bi bi-person-circle fs-5"></i>
             </a>
+
+           
           </div>
         </div>
       </nav>
     </div>
-    
   </header>
 
-  <main class="content-wrapper min-vh-100">
+  <!-- PAGES (ALL ROUTES SHOW WITH SAME COOL BG) -->
+ <main class="page-wrap">
+  <div class="page-glass-fluid">
     <router-outlet></router-outlet>
-  </main>
+  </div>
+</main>
 
+  <!-- FOOTER (optional) -->
   <footer class="footer bg-dark text-white pt-5 mt-5">
     <div class="container">
-      <div class="row g-5 pb-5">
-        <div class="col-lg-4">
-          <h2 class="fw-black text-white mb-4">SMOS<span class="text-warning">.</span></h2>
-          <p class="text-white-50 lh-lg">
-            We provide the highest quality smartphones and technology. Experience the future of mobile shopping with E&E.
-          </p>
-          <div class="social-links d-flex gap-3 mt-4">
-            <a href="#" class="social-circle"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="social-circle"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="social-circle"><i class="bi bi-twitter-x"></i></a>
-          </div>
-        </div>
-
-        <div class="col-6 col-md-3 col-lg-2">
-          <h6 class="text-uppercase fw-bold mb-4 text-warning">Explore</h6>
-          <ul class="list-unstyled footer-menu">
-            <li class="mb-2"><a routerLink="/shop" class="text-white-50 text-decoration-none hover-white">All Products</a></li>
-            <li class="mb-2"><a routerLink="/brands" class="text-white-50 text-decoration-none hover-white">Brands</a></li>
-          </ul>
-        </div>
-
-        <div class="col-6 col-md-3 col-lg-2">
-          <h6 class="text-uppercase fw-bold mb-4 text-warning">Support</h6>
-          <ul class="list-unstyled footer-menu">
-            <li class="mb-2"><a routerLink="/contact" class="text-white-50 text-decoration-none hover-white">Contact Us</a></li>
-            <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none hover-white">Return Policy</a></li>
-            <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none hover-white">Privacy</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-4">
-          <h6 class="text-uppercase fw-bold mb-4 text-white">Join Our Newsletter</h6>
-          <p class="text-white-50 small mb-4">Get the latest updates on new phone releases.</p>
-          <div class="input-group">
-            <input type="email" class="form-control bg-secondary border-0 text-white rounded-start-pill px-4 shadow-none" placeholder="Your Email">
-            <button class="btn btn-warning px-4 fw-bold text-uppercase rounded-end-pill">Join</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="border-top border-secondary py-4 mt-4 text-center text-white-50 small">
-        © 2026 smos-phone Phone Shop. Designed for Tech Enthusiasts.
+      <div class="border-top border-secondary py-4 text-center text-white-50 small">
+        © 2026 smos-phone Phone Shop.
       </div>
     </div>
   </footer>
