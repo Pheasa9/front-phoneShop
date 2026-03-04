@@ -1,0 +1,126 @@
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="h-left">
+      <div class="h-title">Brands</div>
+      <div class="h-sub">Create, update and search brands</div>
+    </div>
+
+    <div class="h-right">
+      <button class="btn btn-primary" (click)="openCreate()">
+        <span class="btn-ico">＋</span>
+        Add Brand
+      </button>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search">
+      <span class="s-ico">⌕</span>
+      <input
+        [(ngModel)]="searchName"
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Search brand... (example: App)"
+      />
+      <button class="btn btn-ghost" (click)="clearSearch()">Reset</button>
+    </div>
+
+    <div class="meta" *ngIf="!searchName && totalPages > 0">
+      <button class="btn btn-soft" (click)="prev()" [disabled]="page === 0">Prev</button>
+      <span class="pill">Page {{ page + 1 }} / {{ totalPages }}</span>
+      <button class="btn btn-soft" (click)="next()" [disabled]="page >= totalPages - 1">Next</button>
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+
+    <!-- Loading Skeleton -->
+    <div *ngIf="isLoading" class="skeleton">
+      <div class="sk-row" *ngFor="let x of [1,2,3,4,5,6]">
+        <div class="sk-id"></div>
+        <div class="sk-name"></div>
+        <div class="sk-action"></div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="!isLoading && errorMsg" class="alert">
+      <span class="a-ico">⚠</span>
+      <span>{{ errorMsg }}</span>
+    </div>
+
+    <!-- Empty -->
+    <div *ngIf="!isLoading && !errorMsg && brands.length === 0" class="empty">
+      <div class="empty-ico">🏷️</div>
+      <div class="empty-title">No brands found</div>
+      <div class="empty-sub">Try typing a different name or create a new brand.</div>
+      <button class="btn btn-primary" (click)="openCreate()">Add Brand</button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap" *ngIf="!isLoading && !errorMsg && brands.length > 0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width:80px">ID</th>
+            <th>Brand</th>
+            <th style="width:140px; text-align:right;">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let b of brands">
+            <td>
+              <span class="id-pill">{{ b.id || '-' }}</span>
+            </td>
+
+            <td>
+              <div class="brand-cell">
+                <div class="brand-avatar">{{ (b.name || '?')[0] }}</div>
+                <div class="brand-info">
+                  <div class="brand-name">{{ b.name }}</div>
+                  <div class="brand-sub2">Phone Brand</div>
+                </div>
+              </div>
+            </td>
+
+            <td class="actions">
+              <button class="icon-btn" title="Edit" (click)="openEdit(b)">✎</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Modal (bootstrap-safe) -->
+  <div class="ps-backdrop" *ngIf="showModal">
+    <div class="ps-modal">
+      <div class="ps-head">
+        <div class="ps-title">{{ isEdit ? 'Edit Brand' : 'Create Brand' }}</div>
+        <button class="ps-x" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="ps-body">
+        <label class="lbl">Brand name</label>
+        <input class="inp" [(ngModel)]="form.name" placeholder="Apple, Samsung..." />
+
+        <div class="tip">Tip: Use clean unique names (ex: Apple, Samsung, Xiaomi).</div>
+
+        <div *ngIf="errorMsg" class="ps-err">{{ errorMsg }}</div>
+      </div>
+
+      <div class="ps-actions">
+        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="save()" [disabled]="isLoading">
+          {{ isLoading ? 'Saving...' : (isEdit ? 'Update' : 'Create') }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

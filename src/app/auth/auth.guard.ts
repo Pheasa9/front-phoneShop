@@ -1,33 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
+import { CanActivate, Router, UrlTree } from '@angular/router';
+import { AuthService } from '../core/services/auth.service'; // ✅ adjust if your path different
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthService {
-  private tokenKey = 'jwtToken';
-  getCurrentUser: any;
+@Injectable({ providedIn: 'root' })
+export class AuthGuard implements CanActivate {
 
-  constructor(private http: HttpClient) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
-  login(username: string, password: string) {
-    return this.http.post<{ token: string }>('http://localhost:8080/login', { username, password })
-      .pipe(
-        tap(res => {
-          console.log('Login success, storing token:', res.token);
-          localStorage.setItem(this.tokenKey, res.token);
-        })
-      );
-  }
+  canActivate(): boolean | UrlTree {
+  console.log('✅ AuthGuard running. Token =', this.auth.getToken());
 
-  getToken(): string | null {
-    const token = localStorage.getItem(this.tokenKey);
-    console.log('AuthService.getToken() ->', token);
-    return token;
-  }
+  if (this.auth.getToken() && this.auth.isAdmin()) return true;
+  return this.router.parseUrl('/login');
+}
 
-  logout() {
-    localStorage.removeItem(this.tokenKey);
-  }
 }

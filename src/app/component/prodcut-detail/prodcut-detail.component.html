@@ -1,0 +1,59 @@
+<div class="detail-container">
+
+  <button class="back-btn" (click)="back()">← Back</button>
+
+  <div *ngIf="isLoading" class="loading-box">
+    <div class="loading-ring"></div>
+    <p>Loading product details...</p>
+  </div>
+
+  <div *ngIf="!isLoading && errorMsg" class="error-box">
+    {{ errorMsg }}
+  </div>
+
+  <div *ngIf="!isLoading && details" class="detail-card">
+
+    <div class="image-side">
+      <img
+        class="product-img"
+        [src]="'assets/img/products/' + details.imagePath"
+        [alt]="details.productName"
+      />
+      <div class="stock-badge" *ngIf="details.availableUnit < 5" [class.out]="details.availableUnit === 0">
+        {{ details.availableUnit === 0 ? 'OUT OF STOCK' : 'ONLY ' + details.availableUnit + ' LEFT' }}
+      </div>
+    </div>
+
+    <div class="info-side">
+      <h2 class="title">{{ details.productName }}</h2>
+
+      <div class="meta-row">
+        <span class="pill">{{ details.brand }}</span>
+        <span class="pill">{{ details.model }}</span>
+        <span class="pill">{{ details.color }}</span>
+      </div>
+
+      <p class="desc" *ngIf="details.description">{{ details.description }}</p>
+
+      <div class="specs">
+        <div class="spec" *ngIf="details.storage"><strong>Storage:</strong> {{ details.storage }}</div>
+        <div class="spec" *ngIf="details.ram"><strong>RAM:</strong> {{ details.ram }}</div>
+        <div class="spec" *ngIf="details.processor"><strong>Processor:</strong> {{ details.processor }}</div>
+        <div class="spec"><strong>Available:</strong> {{ details.availableUnit }}</div>
+      </div>
+
+      <div class="price-row">
+        <div class="price">
+          <div class="sale-price">${{ details.salePrice | number }}</div>
+          <div class="discount" *ngIf="details.discountPrice">
+            Discount: ${{ details.discountPrice | number }}
+          </div>
+        </div>
+
+        
+      </div>
+
+    </div>
+
+  </div>
+</div>

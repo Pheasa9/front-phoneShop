@@ -1,7 +1,6 @@
 /* Container & Background */
 .brands-wrapper {
-  background-color: #fbfbfd;
-  min-height: 100vh;
+ --bg:#bfdefa;  min-height: 100vh;
   padding: 60px 20px;
   font-family: 'Inter', -apple-system, sans-serif;
 }

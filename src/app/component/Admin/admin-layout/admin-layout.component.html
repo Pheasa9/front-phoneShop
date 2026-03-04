@@ -1,0 +1,79 @@
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">⬛</div>
+      <div class="brand-name">Dokan</div>
+    </div>
+
+    <nav class="nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active">
+        <span class="ico">▦</span><span class="txt">Dashboard</span>
+      </a>
+      <a routerLink="/admin/brands" routerLinkActive="active">
+        <span class="ico">🏷️</span><span class="txt">Brands</span>
+      </a>
+      <a routerLink="/admin/models" routerLinkActive="active">
+        <span class="ico">🧩</span><span class="txt">Models</span>
+      </a>
+      <a routerLink="/admin/products" routerLinkActive="active">
+        <span class="ico">📦</span><span class="txt">Products</span>
+      </a>
+      
+      <a routerLink="/admin/sales" routerLinkActive="active">
+        <span class="ico">📈</span><span class="txt">Sales Report</span>
+      </a>
+     
+      <a routerLink="/admin/users" routerLinkActive="active">
+        <span class="ico">👤</span><span class="txt">Users</span>
+      </a>
+
+      <div class="nav-sep"></div>
+
+      <button class="signout" (click)="logout()">
+        <span class="ico">↪</span><span class="txt">Sign Out</span>
+      </button>
+    </nav>
+
+    <div class="pro-card">
+      <div class="pro-title">Dokan Pro</div>
+      <div class="pro-sub">Get access to all features.</div>
+      <button class="pro-btn">Get Pro</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <section class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="page-title">Dashboard</div>
+
+      <div class="search">
+        <span class="s-ico">🔎</span>
+        <input placeholder="Search here..." />
+      </div>
+
+      <div class="top-actions">
+        <button class="pill">🇺🇸 Eng (US) <span class="chev">⌄</span></button>
+        <button class="icon-btn">🔔</button>
+
+        <div class="profile">
+          <div class="avatar">👨</div>
+          <div class="ptext">
+            <div class="pname">Admin</div>
+            <div class="prole">ROLE_ADMIN</div>
+          </div>
+          <span class="chev">⌄</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ROUTER OUTLET -->
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+
+  </section>
+</div>

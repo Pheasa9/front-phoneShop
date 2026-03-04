@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, NavigationEnd, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs/operators';
+
 import { CartService } from './services/cart.service';
 
 @Component({
@@ -11,10 +13,22 @@ import { CartService } from './services/cart.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-[x: string]: any;
-  constructor(private cartService: CartService) {}
+toggleCheckout() {
+throw new Error('Method not implemented.');
+}
 
-  // This updates the badge in the navbar automatically
+  isAdminRoute = false;
+isCheckoutMode: any;
+
+constructor(private cartService: CartService, private router: Router) {
+  this.router.events
+    .pipe(filter(e => e instanceof NavigationEnd))
+    .subscribe(() => {
+      this.isAdminRoute = this.router.url.startsWith('/admin');
+    });
+}
+
+  // navbar badge
   get cartCount(): number {
     return this.cartService.getCartCount();
   }

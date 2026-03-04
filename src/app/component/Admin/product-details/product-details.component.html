@@ -1,0 +1,89 @@
+<div class="detail-wrap">
+
+  <div class="topbar">
+    <button class="back-btn" (click)="back()">← Back</button>
+    <div class="title-box">
+      <div class="title">Product Details</div>
+      <div class="sub">View full information of this product</div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-box">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading product details...</div>
+  </div>
+
+  <div *ngIf="!isLoading && errorMsg" class="err-box">
+    {{ errorMsg }}
+
+    <!-- optional button if details not found -->
+    <!-- <button class="btn" (click)="createEmptyDetails()">Create Empty Details</button> -->
+  </div>
+
+  <div *ngIf="!isLoading && details" class="card">
+
+    <div class="img-col">
+      <div class="img-frame">
+        <img *ngIf="details.imagePath; else noImg"
+             [src]="api.assetImage(details.imagePath)"
+             alt="product">
+        <ng-template #noImg>
+          <div class="noimg">📦</div>
+        </ng-template>
+
+        <div class="badge"
+             [class.low]="details.availableUnit < 5"
+             [class.out]="details.availableUnit === 0">
+          {{ details.availableUnit === 0 ? 'OUT OF STOCK' : (details.availableUnit < 5 ? 'LOW STOCK' : 'IN STOCK') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="info-col">
+      <div class="name">{{ details.productName }}</div>
+
+      <div class="meta">
+        <div class="meta-item"><span>Brand:</span> {{ details.brand }}</div>
+        <div class="meta-item"><span>Model:</span> {{ details.model }}</div>
+        <div class="meta-item"><span>Color:</span> {{ details.color }}</div>
+        <div class="meta-item"><span>Product ID:</span> {{ details.productId }}</div>
+      </div>
+
+      <div class="price-box">
+        <div class="price">
+          ${{ details.salePrice || 0 }}
+        </div>
+
+        <div *ngIf="details.discountPrice" class="discount">
+          Discount: ${{ details.discountPrice }}
+        </div>
+
+        <div class="stock">
+          Stock: <b>{{ details.availableUnit }}</b>
+        </div>
+      </div>
+
+      <div class="specs">
+        <div class="spec">
+          <div class="k">Storage</div>
+          <div class="v">{{ details.storage || '-' }}</div>
+        </div>
+        <div class="spec">
+          <div class="k">RAM</div>
+          <div class="v">{{ details.ram || '-' }}</div>
+        </div>
+        <div class="spec">
+          <div class="k">Processor</div>
+          <div class="v">{{ details.processor || '-' }}</div>
+        </div>
+      </div>
+
+      <div class="desc">
+        <div class="desc-title">Description</div>
+        <div class="desc-text">{{ details.description || 'No description.' }}</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,233 @@
+<div class="wrap">
+
+  <div class="header">
+    <div>
+      <div class="h-title">Products</div>
+      <div class="h-sub">Manage SKU (model + color), stock, price and details</div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-soft" (click)="openUpload()">⬆ Upload Excel</button>
+      <button class="btn btn-primary" (click)="openCreate()">＋ Add Product</button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search">
+      <span class="s-ico">⌕</span>
+      <input [ngModel]="searchName" (ngModelChange)="onSearchChange($event)"
+             placeholder="Search product name..." />
+    </div>
+
+    <select class="select" [(ngModel)]="selectedBrandId" (change)="onBrandChange()">
+      <option [ngValue]="''">All brands</option>
+      <option *ngFor="let b of brands" [ngValue]="b.id">{{ b.name }}</option>
+    </select>
+
+    <button class="btn btn-ghost" (click)="reset()">Reset</button>
+  </div>
+
+  <div class="card">
+    <div *ngIf="msg" class="ok">{{ msg }}</div>
+    <div *ngIf="errorMsg" class="err">{{ errorMsg }}</div>
+
+    <div *ngIf="isLoading" class="loading">Loading...</div>
+
+    <div class="table-wrap" *ngIf="!isLoading && products.length > 0">
+      <table class="table">
+        <thead>
+        <tr>
+          <th style="width:84px">ID</th>
+          <th>Product</th>
+          <th style="width:140px">Color</th>
+          <th style="width:120px">Stock</th>
+          <th style="width:140px">Price</th>
+          <th style="width:320px; text-align:right;">Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let p of products">
+          <td><span class="id-pill">{{ p.idProduct }}</span></td>
+
+          <td>
+            <div class="cell">
+              <div class="thumb">
+                <!-- ✅ backend uploads -->
+                <img *ngIf="p.imagePath" [src]="imgUrl(p.imagePath)" alt="">
+                <span *ngIf="!p.imagePath">📦</span>
+              </div>
+              <div class="info">
+                <div class="name">{{ p.name }}</div>
+                <div class="sub">SKU</div>
+              </div>
+            </div>
+          </td>
+
+          <td><span class="chip">{{ p.color || '-' }}</span></td>
+
+          <td>
+            <span class="stock" [class.low]="p.availableUnit < 5" [class.out]="p.availableUnit === 0">
+              {{ p.availableUnit }}
+            </span>
+          </td>
+
+          <td class="price">
+            ${{ (p.salePrice || 0) | number }}
+          </td>
+
+          <td class="actions">
+            <button class="icon-btn" (click)="openPrice(p)" title="Set Price">💲</button>
+            <button class="icon-btn" (click)="openImport(p)" title="Import Stock">📦</button>
+            <button class="icon-btn danger" (click)="delete(p)" title="Delete">🗑️</button>
+            <button class="btn-link" (click)="goManageDetails(p.idProduct)">
+              Manage Details →
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!isLoading && products.length === 0" class="empty">
+      No products found.
+    </div>
+  </div>
+
+  <!-- CREATE MODAL -->
+  <div class="ps-backdrop" *ngIf="showCreate">
+    <div class="ps-modal">
+      <div class="ps-head">
+        <div class="ps-title">Create Product (SKU)</div>
+        <button class="ps-x" (click)="closeCreate()">✕</button>
+      </div>
+
+      <div class="ps-body">
+        <label class="lbl">Brand</label>
+
+        <!-- ✅ FIX: use ngValue (keeps number type) -->
+        <select class="inp"
+                [(ngModel)]="createBrandId"
+                (ngModelChange)="onCreateBrandSelect($event)">
+          <option [ngValue]="0">-- Select Brand --</option>
+          <option *ngFor="let b of brands" [ngValue]="b.id">{{ b.name }}</option>
+        </select>
+
+        <label class="lbl">Model</label>
+
+        <!-- ✅ FIX: use ngValue -->
+        <select class="inp"
+                [(ngModel)]="createForm.modelId"
+                (ngModelChange)="onModelChange($event)"
+                [disabled]="models.length === 0">
+          <option [ngValue]="0">-- Select Model --</option>
+
+          <option *ngFor="let m of models"
+                  [ngValue]="(m.id ?? m.idModel ?? m.modelId)">
+            {{ (m.name ?? m.modelName ?? m.model) }}
+          </option>
+        </select>
+
+        <div class="tip">Selected modelId: {{ createForm.modelId }}</div>
+
+        <label class="lbl">Color ID</label>
+        <input class="inp" type="number" [(ngModel)]="createForm.colorId" placeholder="example: 1" />
+
+        <!-- ✅ NEW: Image (optional) -->
+        <label class="lbl">Product Image (optional)</label>
+        <input class="inp file" type="file" accept="image/*" (change)="onCreateImageSelected($event)" #imgInput />
+
+        <div class="img-preview" *ngIf="createImagePreview">
+          <img [src]="createImagePreview" alt="preview">
+          <button class="mini-x" type="button" (click)="clearCreateImage(imgInput)">Remove</button>
+        </div>
+
+        <div class="tip">Unique constraint: model + color cannot duplicate.</div>
+      </div>
+
+      <div class="ps-actions">
+        <button class="btn btn-ghost" (click)="closeCreate()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveCreate()" [disabled]="isLoading">
+          {{ isLoading ? 'Saving...' : 'Create' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPORT MODAL -->
+  <div class="ps-backdrop" *ngIf="showImport">
+    <div class="ps-modal">
+      <div class="ps-head">
+        <div class="ps-title">Import Stock</div>
+        <button class="ps-x" (click)="closeImport()">✕</button>
+      </div>
+
+      <div class="ps-body">
+        <label class="lbl">Import Unit</label>
+        <input class="inp" type="number" [(ngModel)]="importForm.importUnit" min="1">
+
+        <label class="lbl">Price per unit (optional)</label>
+        <input class="inp" type="number" [(ngModel)]="importForm.pricePerUnit" placeholder="e.g. 1200">
+
+        <div class="tip">This will increase availableUnit.</div>
+      </div>
+
+      <div class="ps-actions">
+        <button class="btn btn-ghost" (click)="closeImport()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveImport()" [disabled]="isLoading">
+          {{ isLoading ? 'Saving...' : 'Import' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICE MODAL -->
+  <div class="ps-backdrop" *ngIf="showPrice">
+    <div class="ps-modal">
+      <div class="ps-head">
+        <div class="ps-title">Set Sale Price</div>
+        <button class="ps-x" (click)="closePrice()">✕</button>
+      </div>
+
+      <div class="ps-body">
+        <label class="lbl">Price</label>
+        <input class="inp" type="number" [(ngModel)]="priceForm.price" placeholder="e.g. 1500">
+      </div>
+
+      <div class="ps-actions">
+        <button class="btn btn-ghost" (click)="closePrice()">Cancel</button>
+        <button class="btn btn-primary" (click)="savePrice()" [disabled]="isLoading">
+          {{ isLoading ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPLOAD EXCEL MODAL -->
+  <div class="ps-backdrop" *ngIf="showUpload">
+    <div class="ps-modal">
+      <div class="ps-head">
+        <div class="ps-title">Upload Products Excel</div>
+        <button class="ps-x" (click)="closeUpload()">✕</button>
+      </div>
+
+      <div class="ps-body">
+        <label class="lbl">Choose Excel file (.xlsx)</label>
+        <input class="inp file" type="file" (change)="onFileSelected($event)" accept=".xlsx,.xls" />
+
+        <div class="tip">
+          Backend endpoint: <b>/products/uploads</b> (multipart/form-data). <br>
+          If some rows fail, backend returns row errors map.
+        </div>
+      </div>
+
+      <div class="ps-actions">
+        <button class="btn btn-ghost" (click)="closeUpload()">Cancel</button>
+        <button class="btn btn-primary" (click)="uploadFile()" [disabled]="isLoading">
+          {{ isLoading ? 'Uploading...' : 'Upload' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

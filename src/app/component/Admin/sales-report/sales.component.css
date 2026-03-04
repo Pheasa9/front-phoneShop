@@ -1,0 +1,387 @@
+/* ===============================
+   GENERAL
+================================ */
+.wrap{
+  padding: 18px;
+  background: linear-gradient(180deg, #f9fafb, #f1f5f9);
+}
+
+/* Header */
+.head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom: 14px;
+  animation: fadeIn .55s ease-out;
+}
+
+.title{
+  font-size: 22px;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: .2px;
+}
+
+.sub{
+  opacity: .75;
+  margin-top: 3px;
+  color: #64748b;
+}
+
+/* ===============================
+   FILTERS
+================================ */
+.filters{
+  display:flex;
+  gap: 12px;
+  align-items:end;
+  flex-wrap:wrap;
+  margin-bottom: 12px;
+  animation: slideIn .6s ease-in-out;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+}
+
+.field label{
+  font-size: 13px;
+  opacity: .8;
+  color: #475569;
+}
+
+/* Inputs */
+input[type="date"],
+.cancel-input{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  outline:none;
+  background: #fff;
+  transition: border .25s ease, box-shadow .25s ease, transform .2s ease;
+}
+
+input[type="date"]:focus,
+.cancel-input:focus{
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.18);
+  transform: translateY(-1px);
+}
+
+/* ===============================
+   ACTION BUTTONS
+================================ */
+.actions{
+  display:flex;
+  gap:10px;
+  margin-left:auto;
+  flex-wrap:wrap;
+}
+
+.btn{
+  padding: 10px 14px;
+  border-radius: 12px;
+  border:0;
+  cursor:pointer;
+  font-weight: 800;
+  letter-spacing: .2px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .25s ease, filter .25s ease;
+}
+
+.btn:disabled{
+  opacity: .6;
+  cursor:not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Blue */
+.btn-primary{
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color:#fff;
+  box-shadow: 0 10px 18px rgba(37,99,235,.18);
+}
+.btn-primary:hover{ transform: translateY(-2px); filter: brightness(1.05); }
+
+/* Ghost */
+.btn-ghost{
+  background: #eef2ff;
+  color:#1e3a8a;
+}
+.btn-ghost:hover{ transform: translateY(-2px); box-shadow: 0 10px 18px rgba(30,58,138,.12); }
+
+/* Red */
+.btn-danger{
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color:#fff;
+  box-shadow: 0 10px 18px rgba(239,68,68,.18);
+}
+.btn-danger:hover{ transform: translateY(-2px); filter: brightness(1.05); }
+
+/* Little shine animation on hover */
+.btn::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-120%;
+  width: 80%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  transform: skewX(-20deg);
+}
+.btn:hover::after{
+  animation: shine .8s ease;
+}
+
+/* ===============================
+   ERROR
+================================ */
+.err{
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 10px 12px;
+  border-radius: 12px;
+  margin: 10px 0;
+  border: 1px solid #fecaca;
+  animation: shake .35s ease;
+}
+
+/* ===============================
+   SUMMARY (BLUE / GREEN / RED)
+================================ */
+.summary{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 12px 0 14px;
+}
+
+/* base card */
+.sum-card{
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+  position: relative;
+  overflow: hidden;
+  transform: translateY(8px);
+  opacity: 0;
+  animation: cardUp .5s ease forwards;
+}
+
+/* glow overlay */
+.sum-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: radial-gradient(circle at top right, rgba(255,255,255,.55), transparent 60%);
+  pointer-events:none;
+}
+
+/* hover lift */
+.sum-card:hover{
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 14px 28px rgba(0,0,0,.12);
+}
+
+/* labels/value */
+.sum-card .k{
+  font-size: 13px;
+  font-weight: 800;
+  opacity: .9;
+}
+.sum-card .v{
+  font-weight: 900;
+  font-size: 22px;
+  margin-top: 6px;
+}
+
+/* 🔵 First card = Blue */
+.sum-card:nth-child(1){
+  border-left: 6px solid #2563eb;
+}
+.sum-card:nth-child(1) .k{ color:#2563eb; }
+.sum-card:nth-child(1) .v{ color:#0f172a; }
+
+/* 🟢 Second card = Green */
+.sum-card:nth-child(2){
+  border-left: 6px solid #16a34a;
+  animation-delay: .08s;
+}
+.sum-card:nth-child(2) .k{ color:#16a34a; }
+
+/* 🔴 Third card = Red */
+.sum-card:nth-child(3){
+  border-left: 6px solid #ef4444;
+  animation-delay: .16s;
+}
+.sum-card:nth-child(3) .k{ color:#ef4444; }
+
+/* small pulse for values */
+.sum-card .v{
+  animation: pulseSoft 1.8s ease-in-out infinite;
+}
+
+/* ===============================
+   CARD & TABLE
+================================ */
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+  transition: transform .25s ease, box-shadow .25s ease;
+  animation: fadeIn .5s ease;
+}
+
+.card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(0,0,0,.12);
+}
+
+.loading, .empty{
+  padding: 14px;
+  opacity: .75;
+  color:#475569;
+}
+
+.table-wrap{ overflow:auto; }
+
+.table{
+  width:100%;
+  border-collapse: collapse;
+}
+
+.table th{
+  text-align:left;
+  font-size: 13px;
+  opacity:.85;
+  padding: 12px;
+  background: #f8fafc;
+  color: #334155;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table td{
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  color:#0f172a;
+}
+
+.table tbody tr{
+  animation: rowIn .45s ease;
+}
+
+.table tbody tr:hover{
+  background: #f1f5f9;
+}
+
+/* Pill */
+.pill{
+  display:inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #e0e7ff;
+  color: #1e3a8a;
+  font-weight: 900;
+}
+
+/* Footer total */
+tfoot .foot{
+  font-weight: 900;
+  color:#0f172a;
+}
+
+/* ===============================
+   CANCEL BOX (RED SOFT + ANIM)
+================================ */
+.cancel-box{
+  margin: 10px 0;
+  padding: 14px;
+  border-radius: 16px;
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  animation: dropIn .4s ease;
+}
+
+.cancel-title{
+  font-weight: 900;
+  font-size: 16px;
+  color: #b91c1c;
+}
+
+.cancel-sub{
+  opacity:.75;
+  margin-top: 4px;
+  font-size: 13px;
+  color:#64748b;
+}
+
+.cancel-row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-top: 10px;
+  flex-wrap:wrap;
+}
+
+/* ===============================
+   ANIMATIONS
+================================ */
+@keyframes fadeIn{
+  from{ opacity:0; }
+  to{ opacity:1; }
+}
+
+@keyframes slideIn{
+  from{ opacity:0; transform: translateY(12px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+@keyframes cardUp{
+  from{ opacity:0; transform: translateY(14px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+@keyframes rowIn{
+  from{ opacity:0; transform: translateY(8px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+@keyframes dropIn{
+  from{ opacity:0; transform: translateY(-8px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+@keyframes pulseSoft{
+  0%,100%{ transform: scale(1); }
+  50%{ transform: scale(1.03); }
+}
+
+@keyframes shine{
+  from{ left:-120%; }
+  to{ left:140%; }
+}
+
+@keyframes shake{
+  0%{ transform: translateX(0); }
+  25%{ transform: translateX(-4px); }
+  50%{ transform: translateX(4px); }
+  75%{ transform: translateX(-3px); }
+  100%{ transform: translateX(0); }
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media(max-width: 768px){
+  .summary{ grid-template-columns: 1fr; }
+  .actions{ width: 100%; }
+  .btn{ flex: 1; }
+}
