@@ -9,7 +9,7 @@ import { Brand, Product } from '../../../models/product.model';
 export class ProductService {
 
   // Change this to match your backend port/URL
-  private API = 'http://carproject-t9tv.onrender.com';
+  private API = 'https://carproject-t9tv.onrender.com';
 
   constructor(private http: HttpClient) {}
 

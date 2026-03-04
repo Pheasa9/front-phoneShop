@@ -13,7 +13,7 @@ import { CartService } from '../../services/cart.service';
 })
 export class WishlistComponent implements OnInit {
 
-  readonly API = 'http://carproject-t9tv.onrender.com';
+  readonly API = 'https://carproject-t9tv.onrender.com';
   items: WishlistItem[] = [];
   addedId: number | null = null;
 
