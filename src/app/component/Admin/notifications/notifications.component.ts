@@ -23,7 +23,7 @@ type NotificationItem = {
 })
 export class NotificationsComponent implements OnInit {
 
-  readonly API = 'http://localhost:8080/notifications';
+  readonly API = 'http://carproject-t9tv.onrender.com/notifications';
 
   isLoading = false;
   errorMsg = '';

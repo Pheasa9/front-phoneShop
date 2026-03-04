@@ -14,7 +14,7 @@ type OrderStatus = 'all' | 'pending' | 'delivered' | 'processing' | 'cancelled';
 })
 export class OrdersComponent implements OnInit {
 
-  private readonly API = 'http://localhost:8080';
+  private readonly API = 'http://carproject-t9tv.onrender.com';
 
   orders: PurchaseRecord[] = [];
   isLoading = true;

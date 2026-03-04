@@ -26,7 +26,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
   profileOpen = false;
   private pollTimer: any = null;
   private routeSub: any = null;
-  private readonly API = 'http://localhost:8080/notifications';
+  private readonly API = 'http://carproject-t9tv.onrender.com/notifications';
 
   ngOnInit(): void {
     // admin safety
