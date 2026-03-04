@@ -12,7 +12,7 @@ export class AuthService {
  // auth.service.ts
 // auth.service.ts
 login(username: string, password: string): Observable<any> {
-  return this.http.post(`${this.apiUrl}/login`, 
+  return this.http.post(`${this.apiUrl}/api/login`, 
     { username, password }, 
     { observe: 'response' } // 👈 CRITICAL: Tells Angular to include headers
   )
