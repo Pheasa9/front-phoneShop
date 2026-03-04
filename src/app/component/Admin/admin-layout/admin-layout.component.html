@@ -1,45 +1,76 @@
-<div class="layout">
+<div class="shell">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-icon">⬛</div>
-      <div class="brand-name">Dokan</div>
+  <!-- SIDEBAR (fixed) -->
+  <aside class="side" aria-label="Sidebar">
+    <div class="side-head">
+      <div class="brand">
+        <div class="brand-icon">
+          <span>S</span>
+        </div>
+        <div class="brand-text">
+          <div class="brand-name">SMOS</div>
+          <div class="brand-sub">Admin Panel</div>
+        </div>
+      </div>
     </div>
 
-    <nav class="nav">
+    <nav class="side-nav">
+      <div class="nav-label">Main Menu</div>
       <a routerLink="/admin/dashboard" routerLinkActive="active">
-        <span class="ico">▦</span><span class="txt">Dashboard</span>
+        <span class="nav-icon material-symbols-rounded">dashboard</span>
+        <span class="nav-text">Dashboard</span>
+        <span class="nav-arrow material-symbols-rounded">chevron_right</span>
       </a>
       <a routerLink="/admin/brands" routerLinkActive="active">
-        <span class="ico">🏷️</span><span class="txt">Brands</span>
+        <span class="nav-icon material-symbols-rounded">loyalty</span>
+        <span class="nav-text">Brands</span>
+        <span class="nav-arrow material-symbols-rounded">chevron_right</span>
       </a>
       <a routerLink="/admin/models" routerLinkActive="active">
-        <span class="ico">🧩</span><span class="txt">Models</span>
+        <span class="nav-icon material-symbols-rounded">category</span>
+        <span class="nav-text">Models</span>
+        <span class="nav-arrow material-symbols-rounded">chevron_right</span>
       </a>
       <a routerLink="/admin/products" routerLinkActive="active">
-        <span class="ico">📦</span><span class="txt">Products</span>
+        <span class="nav-icon material-symbols-rounded">inventory_2</span>
+        <span class="nav-text">Products</span>
+        <span class="nav-arrow material-symbols-rounded">chevron_right</span>
       </a>
-      
       <a routerLink="/admin/sales" routerLinkActive="active">
-        <span class="ico">📈</span><span class="txt">Sales Report</span>
+        <span class="nav-icon material-symbols-rounded">trending_up</span>
+        <span class="nav-text">Sales Report</span>
+        <span class="nav-arrow material-symbols-rounded">chevron_right</span>
       </a>
-     
       <a routerLink="/admin/users" routerLinkActive="active">
-        <span class="ico">👤</span><span class="txt">Users</span>
+        <span class="nav-icon material-symbols-rounded">group</span>
+        <span class="nav-text">Users</span>
+        <span class="nav-arrow material-symbols-rounded">chevron_right</span>
       </a>
 
       <div class="nav-sep"></div>
+      <div class="nav-label">Other</div>
 
-      <button class="signout" (click)="logout()">
-        <span class="ico">↪</span><span class="txt">Sign Out</span>
-      </button>
+      <a routerLink="/admin/notifications" routerLinkActive="active">
+        <span class="nav-icon material-symbols-rounded">notifications</span>
+        <span class="nav-text">Notifications</span>
+        <span class="nav-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+        <span class="nav-arrow material-symbols-rounded">chevron_right</span>
+      </a>
     </nav>
 
-    <div class="pro-card">
-      <div class="pro-title">Dokan Pro</div>
-      <div class="pro-sub">Get access to all features.</div>
-      <button class="pro-btn">Get Pro</button>
+    <div class="side-foot">
+      <div class="pro-card">
+        <div class="pro-glow" aria-hidden="true"></div>
+        <div class="pro-content">
+          <div class="pro-title"><span class="material-symbols-rounded" style="font-size:15px;vertical-align:-2px;margin-right:3px">bolt</span> Go Pro</div>
+          <div class="pro-sub">Unlock all premium features</div>
+          <button class="pro-btn">Upgrade Now</button>
+        </div>
+      </div>
+
+      <button class="logout-btn" (click)="logout()">
+        <span class="material-symbols-rounded" style="font-size:16px">logout</span> Sign Out
+      </button>
     </div>
   </aside>
 
@@ -48,30 +79,72 @@
 
     <!-- TOPBAR -->
     <header class="topbar">
-      <div class="page-title">Dashboard</div>
-
-      <div class="search">
-        <span class="s-ico">🔎</span>
-        <input placeholder="Search here..." />
+      <div class="tb-left">
+        <div class="page-title">Dashboard</div>
       </div>
 
-      <div class="top-actions">
-        <button class="pill">🇺🇸 Eng (US) <span class="chev">⌄</span></button>
-        <button class="icon-btn">🔔</button>
+      <div class="tb-center">
+        <div class="tb-search">
+          <span class="search-icon material-symbols-rounded">search</span>
+          <input placeholder="Search anything..." />
+        </div>
+      </div>
 
-        <div class="profile">
-          <div class="avatar">👨</div>
-          <div class="ptext">
-            <div class="pname">Admin</div>
-            <div class="prole">ROLE_ADMIN</div>
+      <div class="tb-right">
+        <button class="tb-icon-btn" routerLink="/admin/notifications">
+          <span class="material-symbols-rounded">notifications</span>
+          <span class="tb-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+        </button>
+
+        <!-- Profile with dropdown -->
+        <div class="tb-profile-wrap">
+          <div class="tb-profile" (click)="toggleProfileMenu()">
+            <div class="tb-avatar">A</div>
+            <div class="tb-user">
+              <span class="tb-name">Admin</span>
+              <span class="tb-role">Manager</span>
+            </div>
+            <span class="tb-chevron material-symbols-rounded" [class.open]="profileOpen">expand_more</span>
           </div>
-          <span class="chev">⌄</span>
+
+          <!-- Dropdown -->
+          <div class="profile-dropdown" *ngIf="profileOpen">
+            <div class="dd-header">
+              <div class="dd-avatar">A</div>
+              <div>
+                <div class="dd-name">Admin</div>
+                <div class="dd-email">admin&#64;smos.com</div>
+              </div>
+            </div>
+
+            <div class="dd-sep"></div>
+
+            <div class="dd-section-label">Settings</div>
+
+            <a class="dd-item" routerLink="/admin/notifications" (click)="profileOpen = false">
+              <span class="dd-icon material-symbols-rounded">notifications</span>
+              <span class="dd-text">Notifications</span>
+              <span class="dd-count" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+            </a>
+
+            <a class="dd-item" routerLink="/admin/users" (click)="profileOpen = false">
+              <span class="dd-icon material-symbols-rounded">manage_accounts</span>
+              <span class="dd-text">Manage Users</span>
+            </a>
+
+            <div class="dd-sep"></div>
+
+            <button class="dd-item dd-logout" (click)="logout()">
+              <span class="dd-icon material-symbols-rounded">logout</span>
+              <span class="dd-text">Sign Out</span>
+            </button>
+          </div>
         </div>
       </div>
     </header>
 
-    <!-- ROUTER OUTLET -->
-    <main class="content">
+    <!-- CONTENT (scroll area) -->
+    <main class="page" #pageRef>
       <router-outlet></router-outlet>
     </main>
 

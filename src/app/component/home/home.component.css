@@ -4,10 +4,14 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  
-
   overflow: hidden;
   padding: 80px 0;
+  animation: heroBgIn 1s ease both;
+}
+
+@keyframes heroBgIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 /* Typography Style */
@@ -18,12 +22,19 @@
   line-height: 0.95;
   letter-spacing: -3px;
   margin-bottom: 25px;
+  animation: heroTextDrop .7s .2s cubic-bezier(.16,1,.3,1) both;
+}
+
+@keyframes heroTextDrop {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .hero-description {
   font-size: 1.25rem;
   color: rgba(0,0,0,0.7);
   margin-bottom: 40px;
+  animation: heroTextDrop .7s .35s cubic-bezier(.16,1,.3,1) both;
 }
 
 .btn-waitlist {
@@ -34,12 +45,17 @@
   border: none;
   font-weight: 700;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  transition: 0.3s;
+  transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s;
+  animation: heroTextDrop .7s .5s cubic-bezier(.16,1,.3,1) both;
 }
 
 .btn-waitlist:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 16px 45px rgba(0,0,0,0.3);
+}
+.btn-waitlist:active {
+  transform: translateY(-1px) scale(0.97);
+  transition-duration: .1s;
 }
 
 /* Phone and Card Styling */
@@ -47,6 +63,12 @@
   position: relative;
   display: flex;
   justify-content: center;
+  animation: phonePopIn .8s .4s cubic-bezier(.16,1,.3,1) both;
+}
+
+@keyframes phonePopIn {
+  from { opacity: 0; transform: scale(0.85) translateY(30px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .phone-frame {
@@ -58,6 +80,10 @@
   border: 12px solid #000;
   box-shadow: 0 50px 100px rgba(0,0,0,0.15);
   z-index: 2;
+  transition: box-shadow .4s;
+}
+.phone-frame:hover {
+  box-shadow: 0 60px 120px rgba(0,0,0,0.2);
 }
 
 .planning-card {
@@ -70,6 +96,11 @@
   top: 150px;
   z-index: 3;
   box-shadow: 0 40px 80px rgba(0,0,0,0.1);
+  transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s;
+}
+.planning-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 50px 90px rgba(0,0,0,0.14);
 }
 
 /* UI Elements inside Phone */
@@ -99,6 +130,11 @@
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
+}
+
+@keyframes gentlePulse {
+  0%, 100% { box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+  50% { box-shadow: 0 20px 50px rgba(0,0,0,0.16); }
 }
 
 .animate-float {
@@ -195,6 +231,12 @@
   box-shadow: 0 15px 35px rgba(0,0,0,0.1);
   z-index: 4;
   border: 1px solid rgba(255,255,255,0.5);
+  transition: transform .3s cubic-bezier(.16,1,.3,1), box-shadow .3s;
+  animation: float 5s ease-in-out infinite, gentlePulse 3s ease infinite;
+}
+.floating-toast:hover {
+  transform: translateY(-5px) scale(1.04);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.14);
 }
 
 .toast-icon {

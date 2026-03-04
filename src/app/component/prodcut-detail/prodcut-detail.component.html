@@ -50,7 +50,13 @@
           </div>
         </div>
 
-        
+        <button class="add-cart-btn"
+                [disabled]="details.availableUnit === 0"
+                [class.added]="addedToCart"
+                (click)="addToCart()">
+          <i class="bi" [ngClass]="addedToCart ? 'bi-check-lg' : 'bi-bag-plus'"></i>
+          {{ addedToCart ? 'Added!' : details.availableUnit === 0 ? 'Out of Stock' : 'Add to Bag' }}
+        </button>
       </div>
 
     </div>

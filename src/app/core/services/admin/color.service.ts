@@ -11,7 +11,7 @@ export interface ColorDto {
 
 @Injectable({ providedIn: 'root' })
 export class ColorAdminService {
-  private baseUrl = 'http://localhost:8080/colors';
+  private baseUrl = 'https://carproject-t9tv.onrender.com/colors';
 
   constructor(private http: HttpClient) {}
 

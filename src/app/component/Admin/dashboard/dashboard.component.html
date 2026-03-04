@@ -1,15 +1,11 @@
 <!-- dashboard.component.html -->
 <section class="db">
 
-  <!-- Animated background -->
+  <!-- Clean background -->
   <div class="bg-blobs" aria-hidden="true">
     <span class="blob b1"></span>
     <span class="blob b2"></span>
     <span class="blob b3"></span>
-
-    <span class="spark s1"></span>
-    <span class="spark s2"></span>
-    <span class="spark s3"></span>
   </div>
 
   <!-- Top bar -->
@@ -107,10 +103,10 @@
 
       <!-- RIGHT: Top Products -->
       <div class="db-right">
-        <div class="card table-card" style="animation-delay: 480ms;">
+        <div class="card top-card" style="animation-delay: 480ms;">
           <div class="card-head">
             <div>
-              <div class="card-title">Top Products</div>
+              <div class="card-title top-title">🏆 Top Products</div>
               <div class="card-sub">Best sellers ({{ selectedDate }})</div>
             </div>
             <div class="card-actions">
@@ -122,41 +118,61 @@
             No sales for this date.
           </div>
 
-          <!-- iOS grouped list -->
-          <div *ngIf="(topProducts?.length || 0) > 0" class="ios-list">
-            <div class="ios-list-head">
-              <span>#</span>
-              <span>Product</span>
-              <span>Popularity</span>
-              <span class="right">Sales</span>
-            </div>
-
-            <div class="ios-group">
-              <div
-                class="ios-row"
-                *ngFor="let p of topProducts; let i=index"
-                [style.animationDelay.ms]="i * 70"
-              >
-                <span class="muted">{{ i + 1 }}</span>
-
-                <span class="strong">
-                  {{ p.name }}
-                </span>
-
-                <span class="popcell">
-                  <div class="pbar">
-                    <div class="pfill" [style.width.%]="p.popularity"></div>
-                  </div>
-                  <small>{{ p.popularity }}%</small>
-                </span>
-
-                <span class="right pill">${{ p.sales | number }}</span>
+          <div *ngIf="(topProducts?.length || 0) > 0" class="top-list">
+            <div
+              class="top-row"
+              *ngFor="let p of topProducts; let i=index"
+              [class.gold]="i === 0"
+              [class.silver]="i === 1"
+              [class.bronze]="i === 2"
+              [style.animationDelay.ms]="i * 90"
+            >
+              <div class="top-rank" [attr.data-rank]="i + 1">
+                <span *ngIf="i === 0">🥇</span>
+                <span *ngIf="i === 1">🥈</span>
+                <span *ngIf="i === 2">🥉</span>
+                <span *ngIf="i > 2">#{{ i + 1 }}</span>
               </div>
+              <div class="top-info">
+                <div class="top-name">{{ p.name }}</div>
+                <div class="top-bar-wrap">
+                  <div class="top-bar" [style.width.%]="p.popularity"></div>
+                </div>
+              </div>
+              <div class="top-sales">${{ p.sales | number }}</div>
             </div>
           </div>
 
         </div>
-      </div>
+
+        <!-- Least Selling (inside db-right, below Top Products) -->
+        <div class="card least-card" style="animation-delay: 550ms;" *ngIf="leastProducts.length > 0">
+          <div class="card-head">
+            <div>
+              <div class="card-title least-title">📉 Least Selling</div>
+              <div class="card-sub">Top 3 lowest sales ({{ selectedDate }})</div>
+            </div>
+          </div>
+
+          <div class="least-list">
+            <div
+              class="least-row"
+              *ngFor="let p of leastProducts.slice(0, 3); let i=index"
+              [style.animationDelay.ms]="i * 90"
+            >
+              <div class="least-rank">#{{ i + 1 }}</div>
+              <div class="least-info">
+                <div class="least-name">{{ p.name }}</div>
+                <div class="least-bar-wrap">
+                  <div class="least-bar" [style.width.%]="p.popularity"></div>
+                </div>
+              </div>
+              <div class="least-sales">${{ p.sales | number }}</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /db-right -->
 
     </div>
 

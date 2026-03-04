@@ -1,0 +1,595 @@
+/* ============================================================
+   PhoneShop Admin – Notifications
+   Premium glass-morphism + refined gradients
+   ============================================================ */
+
+/* ---------- Host & wrapper ---------- */
+:host {
+  display: block;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color: #1d1d1f;
+  -webkit-font-smoothing: antialiased;
+}
+
+.nwrap {
+  padding: 28px 32px;
+  max-width: 1060px;
+  margin: 0 auto;
+  animation: fadeUp .45s cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Page header ---------- */
+.nhead {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+
+.ntitle h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #1d1d1f 40%, #0a84ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ntitle p {
+  margin: 6px 0 0;
+  font-size: 13.5px;
+  color: rgba(60,60,67,.6);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.nactions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ---------- Buttons ---------- */
+.nbtn {
+  border: 0;
+  border-radius: 14px;
+  padding: 10px 20px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform .18s cubic-bezier(.22,1,.36,1),
+              box-shadow .18s cubic-bezier(.22,1,.36,1),
+              opacity .15s ease;
+  background: linear-gradient(135deg, #0a84ff 0%, #0071e3 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,113,227,.18);
+}
+
+.nbtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0,113,227,.25);
+}
+
+.nbtn:active {
+  transform: translateY(0) scale(.97);
+  opacity: .92;
+}
+
+.nbtn.ghost {
+  background: rgba(0,0,0,.04);
+  color: #1d1d1f;
+  box-shadow: none;
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+.nbtn.ghost:hover {
+  background: rgba(0,0,0,.07);
+  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+}
+
+.nbtn.danger {
+  background: linear-gradient(135deg, #ff453a, #d70015);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(255,59,48,.2);
+}
+
+.nbtn.danger:hover {
+  box-shadow: 0 12px 32px rgba(255,59,48,.28);
+}
+
+/* ---------- State boxes (loading / error / empty) ---------- */
+.nstate,
+.nempty {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.65);
+  border: 1px solid rgba(0,0,0,.06);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(60,60,67,.75);
+  box-shadow: 0 2px 12px rgba(0,0,0,.04);
+}
+
+.nstate.err {
+  background: rgba(255,59,48,.07);
+  border-color: rgba(255,59,48,.15);
+  color: #c0392b;
+}
+
+.nspin {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 2.5px solid rgba(0,0,0,.08);
+  border-top-color: #0a84ff;
+  animation: sp .75s linear infinite;
+}
+
+@keyframes sp {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Notification list ---------- */
+.nlist {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ---------- Notification row ---------- */
+.nrow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,.06);
+  background: rgba(255,255,255,.6);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s cubic-bezier(.22,1,.36,1),
+              box-shadow .2s cubic-bezier(.22,1,.36,1),
+              border-color .2s ease,
+              background .2s ease;
+}
+
+.nrow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(10,132,255,.03) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;
+}
+
+.nrow:hover::before {
+  opacity: 1;
+}
+
+.nrow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 48px rgba(0,0,0,.09), 0 2px 8px rgba(0,0,0,.04);
+  border-color: rgba(10,132,255,.12);
+}
+
+.nrow:active {
+  transform: translateY(0) scale(.995);
+}
+
+.nrow.unread {
+  border-left: 4px solid #0a84ff;
+  background: linear-gradient(135deg, rgba(10,132,255,.05) 0%, rgba(255,255,255,.7) 100%);
+}
+
+.nrow.unread .nava {
+  background: rgba(10,132,255,.14);
+  border-color: rgba(10,132,255,.22);
+}
+
+/* ---------- Avatar ---------- */
+.nava {
+  width: 50px;
+  height: 50px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(10,132,255,.08), rgba(52,199,89,.06));
+  border: 1px solid rgba(10,132,255,.12);
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.nrow:hover .nava {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(10,132,255,.12);
+}
+
+.nava-in {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0a84ff, #0071e3);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 8px rgba(10,132,255,.25);
+}
+
+/* ---------- Text / meta ---------- */
+.nmeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.nmeta-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.nname {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #1d1d1f;
+}
+
+.ntime {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(60,60,67,.45);
+  white-space: nowrap;
+}
+
+.nmeta-sub {
+  margin-top: 5px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: rgba(60,60,67,.6);
+  font-size: 13px;
+  font-weight: 500;
+  min-width: 0;
+}
+
+.nemail {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+.npreview {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.ndot {
+  opacity: .4;
+  font-size: 8px;
+}
+
+/* ---------- "New" badge ---------- */
+.nbadge {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(10,132,255,.12), rgba(10,132,255,.06));
+  border: 1px solid rgba(10,132,255,.18);
+  color: #0071e3;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  animation: badgePulse 2.5s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(10,132,255,.15); }
+  50%      { box-shadow: 0 0 0 6px rgba(10,132,255,0); }
+}
+
+/* ============================================================
+   Detail Modal
+   ============================================================ */
+
+.notif-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9998 !important;
+  background: rgba(0,0,0,.35) !important;
+  backdrop-filter: blur(12px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(1.4) !important;
+  animation: backdropIn .25s ease both;
+}
+
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.notif-modal {
+  position: fixed !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 9999 !important;
+
+  width: min(780px, calc(100vw - 40px)) !important;
+  max-height: calc(100vh - 40px) !important;
+  overflow: auto !important;
+
+  border-radius: 24px;
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  border: 1px solid rgba(255,255,255,.5);
+  box-shadow:
+    0 32px 80px rgba(0,0,0,.18),
+    0 8px 24px rgba(0,0,0,.08),
+    inset 0 1px 0 rgba(255,255,255,.6);
+  animation: modalIn .35s cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(.96); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* --- Modal header --- */
+.dhead {
+  padding: 20px 24px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+
+.dname {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #1d1d1f;
+}
+
+.dsub {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(60,60,67,.6);
+}
+
+.dx {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0,0,0,.05);
+  font-size: 14px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background .15s ease, transform .15s ease;
+}
+
+.dx:hover {
+  background: rgba(0,0,0,.1);
+  transform: scale(1.08);
+}
+
+/* --- Modal body --- */
+.dbody {
+  padding: 20px 24px;
+}
+
+.dmeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.dpill {
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(52,199,89,.1);
+  border: 1px solid rgba(52,199,89,.18);
+  color: #28a745;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dpill.unread {
+  background: linear-gradient(135deg, rgba(10,132,255,.1), rgba(10,132,255,.06));
+  border-color: rgba(10,132,255,.2);
+  color: #0071e3;
+}
+
+.dtime {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(60,60,67,.5);
+}
+
+/* --- Detail cards grid --- */
+.dgrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.dcard,
+.dmsg {
+  border-radius: 16px;
+  background: rgba(0,0,0,.025);
+  border: 1px solid rgba(0,0,0,.05);
+  padding: 14px 16px;
+  transition: background .15s ease, box-shadow .15s ease;
+}
+
+.dcard:hover,
+.dmsg:hover {
+  background: rgba(0,0,0,.04);
+  box-shadow: 0 2px 12px rgba(0,0,0,.04);
+}
+
+.k {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: rgba(60,60,67,.55);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.v {
+  margin-top: 6px;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #1d1d1f;
+}
+
+.v.msg {
+  white-space: pre-wrap;
+  line-height: 1.65;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(29,29,31,.85);
+}
+
+/* --- Modal footer --- */
+.dfoot {
+  padding: 16px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .nwrap {
+    padding: 20px 18px;
+  }
+
+  .ntitle h2 {
+    font-size: 24px;
+  }
+
+  .nrow {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .nava {
+    width: 44px;
+    height: 44px;
+  }
+
+  .nava-in {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  .notif-modal {
+    width: calc(100vw - 24px) !important;
+    max-height: calc(100vh - 24px) !important;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .nwrap {
+    padding: 14px 12px;
+  }
+
+  .nhead {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 14px;
+  }
+
+  .ntitle h2 {
+    font-size: 22px;
+  }
+
+  .dgrid {
+    grid-template-columns: 1fr;
+  }
+
+  .nemail {
+    max-width: 160px;
+  }
+
+  .dhead {
+    padding: 16px 18px 14px;
+  }
+
+  .dbody {
+    padding: 16px 18px;
+  }
+
+  .dfoot {
+    padding: 14px 18px;
+  }
+}
+
+/* ============================================================
+   Scrollbar (subtle)
+   ============================================================ */
+.notif-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notif-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notif-modal::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.12);
+  border-radius: 999px;
+}
+
+.notif-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,.2);
+}

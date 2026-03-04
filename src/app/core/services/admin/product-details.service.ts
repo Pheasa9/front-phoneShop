@@ -24,7 +24,7 @@ export interface ProductDetailsDto {
 @Injectable({ providedIn: 'root' })
 export class ProductDetailsService {
   // ✅ match your backend controller: @RequestMapping("/productDetails")
-  private readonly baseUrl = 'http://localhost:8080/productDetails';
+  private readonly baseUrl = 'hhttps://carproject-t9tv.onrender.com/productDetails';
 
   constructor(private http: HttpClient) {}
 

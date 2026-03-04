@@ -1,0 +1,121 @@
+<section class="nwrap">
+
+  <header class="nhead">
+    <div class="ntitle">
+      <h2>Notifications</h2>
+      <p>User Requests / Messages</p>
+    </div>
+
+    <div class="nactions">
+      <button class="nbtn ghost" type="button" (click)="load()">Refresh</button>
+    </div>
+  </header>
+
+  <div *ngIf="isLoading" class="nstate">
+    <span class="nspin"></span>
+    <span>Loading...</span>
+  </div>
+
+  <div *ngIf="!isLoading && errorMsg" class="nstate err">
+    {{ errorMsg }}
+  </div>
+
+  <div *ngIf="!isLoading && !errorMsg && notifications.length === 0" class="nempty">
+    No messages yet.
+  </div>
+
+  <div *ngIf="!isLoading && !errorMsg && notifications.length > 0" class="nlist">
+    <button
+      class="nrow"
+      *ngFor="let n of notifications; trackBy: trackById"
+      type="button"
+      (click)="open(n)"
+      [class.unread]="!n.readStatus"
+    >
+      <div class="nava">
+        <div class="nava-in">
+          {{ (n.firstName || 'U').slice(0,1) | uppercase }}
+        </div>
+      </div>
+
+      <div class="nmeta">
+        <div class="nmeta-top">
+          <div class="nname">{{ fullName(n) }}</div>
+          <div class="ntime">{{ n.createdAt ? (n.createdAt | date:'short') : '' }}</div>
+        </div>
+
+        <div class="nmeta-sub">
+          <span class="nemail">{{ n.email }}</span>
+          <span class="ndot">•</span>
+          <span class="npreview">{{ n.message }}</span>
+        </div>
+      </div>
+
+      <div class="nbadge" *ngIf="!n.readStatus">New</div>
+    </button>
+  </div>
+
+  <!-- Backdrop -->
+  <div class="notif-backdrop" *ngIf="isOpen" (click)="close()"></div>
+
+  <!-- Detail Popup -->
+  <div class="notif-modal" *ngIf="isOpen && selected" (click)="$event.stopPropagation()">
+    <div class="dhead">
+      <div class="dleft">
+        <div class="dname">{{ fullName(selected) }}</div>
+        <div class="dsub">
+          <span>{{ selected.email }}</span>
+          <span *ngIf="selected.mobileNo"> • {{ selected.mobileNo }}</span>
+        </div>
+      </div>
+
+      <button class="dx" type="button" (click)="close()">✕</button>
+    </div>
+
+    <div class="dbody">
+
+      <div class="dmeta">
+        <span class="dpill" [class.unread]="!selected.readStatus">
+          {{ selected.readStatus ? 'Read' : 'Unread' }}
+        </span>
+        <span class="dtime">
+          {{ selected.createdAt ? (selected.createdAt | date:'full') : '' }}
+        </span>
+      </div>
+
+      <div class="dgrid">
+        <div class="dcard">
+          <div class="k">Requester</div>
+          <div class="v">{{ fullName(selected) }}</div>
+        </div>
+
+        <div class="dcard">
+          <div class="k">Email</div>
+          <div class="v">{{ selected.email }}</div>
+        </div>
+
+        <div class="dcard" *ngIf="selected.mobileNo">
+          <div class="k">Phone</div>
+          <div class="v">{{ selected.mobileNo }}</div>
+        </div>
+
+        <div class="dcard" *ngIf="selected.createdBy">
+          <div class="k">Created By</div>
+          <div class="v">{{ selected.createdBy }}</div>
+        </div>
+      </div>
+
+      <div class="dmsg">
+        <div class="k">Message</div>
+        <div class="v msg">{{ selected.message }}</div>
+      </div>
+
+    </div>
+
+    <div class="dfoot">
+      <button class="nbtn ghost" type="button" (click)="close()">Close</button>
+      <button class="nbtn danger" type="button" (click)="delete(selected)">Delete</button>
+    </div>
+  </div>
+
+</section>

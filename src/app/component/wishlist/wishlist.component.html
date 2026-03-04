@@ -1,0 +1,63 @@
+<div class="wish-page">
+  <div class="wish-card">
+
+    <!-- Header -->
+    <div class="wish-header">
+      <button class="back-btn" (click)="goBack()">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <span class="header-title">My Wishlist</span>
+      <button class="clear-btn" *ngIf="items.length > 0" (click)="clearAll()">Clear All</button>
+    </div>
+
+    <!-- Count -->
+    <div class="wish-count" *ngIf="items.length > 0">
+      {{ items.length }} item{{ items.length > 1 ? 's' : '' }} saved
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty" *ngIf="items.length === 0">
+      <div class="empty-icon"><i class="bi bi-heart"></i></div>
+      <h3>Your wishlist is empty</h3>
+      <p>Tap the heart on any product to save it here</p>
+      <a routerLink="/products" class="shop-btn">Browse Products</a>
+    </div>
+
+    <!-- Wishlist Items -->
+    <div class="wish-list" *ngIf="items.length > 0">
+      <div class="wish-item" *ngFor="let item of items; let i = index" [style.animation-delay]="(i * 0.05) + 's'">
+
+        <a [routerLink]="['/product-details', item.id]" class="item-img-wrap">
+          <img [src]="imgUrl(item)" [alt]="item.name" (error)="onImgError($event)" class="item-img" />
+        </a>
+
+        <div class="item-info">
+          <a [routerLink]="['/product-details', item.id]" class="item-name">{{ item.name }}</a>
+          <span class="item-brand">{{ item.brand || 'Unknown Brand' }}</span>
+          <div class="item-price">{{ (item.salePrice || 0) | currency:'USD':'symbol':'1.0-0' }}</div>
+          <div class="item-stock" [class.out]="item.availableUnit === 0">
+            {{ item.availableUnit > 0 ? 'In Stock' : 'Out of Stock' }}
+          </div>
+        </div>
+
+        <div class="item-actions">
+          <button class="buy-btn"
+                  [class.added]="addedId === item.id"
+                  [disabled]="item.availableUnit === 0"
+                  (click)="addToCart(item)"
+                  title="Add to Bag">
+            <i class="bi" [ngClass]="addedId === item.id ? 'bi-check-lg' : 'bi-bag-plus'"></i>
+          </button>
+          <a [routerLink]="['/product-details', item.id]" class="detail-btn" title="View Details">
+            <i class="bi bi-eye"></i>
+          </a>
+          <button class="remove-btn" (click)="remove(item.id)" title="Remove">
+            <i class="bi bi-trash3"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

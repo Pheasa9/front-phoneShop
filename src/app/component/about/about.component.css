@@ -1,6 +1,18 @@
 /* --- GLOBAL STYLES & RESET --- */
+:host {
+    display: block;
+    --bg: #bfdefa;
+    --blue: #2f6bff;
+    --violet: #7c3aed;
+    background:
+        radial-gradient(900px 520px at 12% -10%, rgba(47,107,255,0.16), transparent 58%),
+        radial-gradient(860px 520px at 90% 0%, rgba(124,58,237,0.12), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0) 55%),
+        var(--bg);
+    min-height: 100vh;
+}
+
 .about-page { 
-    background: #ffffff; 
     color: #1d1d1f; 
     line-height: 1.6; 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -25,20 +37,47 @@
 
 /* --- ANIMATIONS --- */
 .fade-in { 
-    animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+    animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
 }
 
 @keyframes fadeIn { 
-    from { opacity: 0; transform: translateY(20px); } 
+    from { opacity: 0; transform: translateY(24px); } 
     to { opacity: 1; transform: translateY(0); } 
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes countUp {
+    from { opacity: 0; transform: translateY(10px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* --- HERO SECTION --- */
 .hero { 
     padding: 120px 20px 100px; 
     text-align: center; 
-    background: #fbfbfd; 
-    border-bottom: 1px solid #f2f2f2; 
+    background: rgba(255,255,255,0.45); 
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+    overflow: hidden;
 }
 
 .hero h1 { 
@@ -48,6 +87,7 @@
     line-height: 1.05; 
     margin-bottom: 25px; 
     color: #1d1d1f;
+    animation: slideUp .7s .15s cubic-bezier(.16,1,.3,1) both;
 }
 
 .hero-subtext { 
@@ -56,6 +96,7 @@
     font-size: 1.4rem; 
     color: #6e6e73; 
     font-weight: 400;
+    animation: slideUp .7s .3s cubic-bezier(.16,1,.3,1) both;
 }
 
 /* --- MISSION & OWNER SECTION --- */
@@ -75,7 +116,13 @@
     border-radius: 30px; 
     overflow: hidden; 
     box-shadow: 0 25px 50px rgba(0,0,0,0.12); 
-    background: #f5f5f7;
+    background: rgba(255,255,255,0.75);
+    animation: slideLeft .7s .2s cubic-bezier(.16,1,.3,1) both;
+    transition: box-shadow .4s, transform .4s;
+}
+.profile-img-wrap:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 32px 60px rgba(0,0,0,0.16);
 }
 
 .profile-img-wrap img { 
@@ -117,8 +164,8 @@
 }
 
 /* Text Content */
-.text-content h2 { font-size: 3rem; font-weight: 800; margin-bottom: 25px; letter-spacing: -1px; }
-.text-content p { font-size: 1.2rem; margin-bottom: 22px; color: #424245; }
+.text-content h2 { font-size: 3rem; font-weight: 800; margin-bottom: 25px; letter-spacing: -1px; animation: slideRight .7s .3s cubic-bezier(.16,1,.3,1) both; }
+.text-content p { font-size: 1.2rem; margin-bottom: 22px; color: #424245; animation: slideRight .7s .4s cubic-bezier(.16,1,.3,1) both; }
 
 /* Stats Grid */
 .stats { 
@@ -129,10 +176,20 @@
 }
 
 .stat { 
-    background: #f5f5f7; 
+    background: rgba(255,255,255,0.7); 
+    backdrop-filter: blur(6px);
     padding: 25px; 
     border-radius: 24px; 
-    text-align: center; 
+    text-align: center;
+    animation: countUp .5s cubic-bezier(.16,1,.3,1) both;
+    transition: transform .3s, box-shadow .3s;
+}
+.stat:nth-child(1) { animation-delay: .5s; }
+.stat:nth-child(2) { animation-delay: .6s; }
+.stat:nth-child(3) { animation-delay: .7s; }
+.stat:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.06);
 }
 
 .stat strong { 
@@ -145,7 +202,7 @@
 .stat span { color: #86868b; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
 
 /* --- CORE VALUES SECTION --- */
-.values-section { padding: 100px 0; background: #ffffff; }
+.values-section { padding: 100px 0; }
 
 .center-head { text-align: center; margin-bottom: 60px; }
 .center-head h2 { font-size: 2.8rem; font-weight: 800; }
@@ -158,24 +215,30 @@
 
 .value-item { 
     padding: 50px 40px; 
-    background: #fbfbfd; 
+    background: rgba(255,255,255,0.7); 
+    backdrop-filter: blur(8px);
     border-radius: 32px; 
     text-align: center; 
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(.16,1,.3,1);
+    animation: scaleIn .5s cubic-bezier(.16,1,.3,1) both;
 }
+.value-item:nth-child(1) { animation-delay: .15s; }
+.value-item:nth-child(2) { animation-delay: .25s; }
+.value-item:nth-child(3) { animation-delay: .35s; }
 
 .value-item:hover { 
-    transform: translateY(-8px); 
-    background: #f5f5f7; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    transform: translateY(-8px) scale(1.02); 
+    background: rgba(255,255,255,0.85); 
+    box-shadow: 0 16px 40px rgba(0,0,0,0.06);
 }
 
-.v-icon { font-size: 3rem; margin-bottom: 25px; display: block; }
+.v-icon { font-size: 3rem; margin-bottom: 25px; display: block; transition: transform .3s; }
+.value-item:hover .v-icon { transform: scale(1.15) rotate(-5deg); }
 .value-item h4 { font-size: 1.4rem; font-weight: 700; margin-bottom: 15px; }
 .value-item p { color: #6e6e73; font-size: 1rem; line-height: 1.5; }
 
 /* --- TEAM SECTION --- */
-.team { padding: 100px 0; background: #fbfbfd; }
+.team { padding: 100px 0; background: rgba(255,255,255,0.35); backdrop-filter: blur(6px); }
 
 .team-grid { 
     display: grid; 
@@ -184,17 +247,23 @@
 }
 
 .member { 
-    background: #ffffff; 
+    background: rgba(255,255,255,0.8); 
+    backdrop-filter: blur(8px);
     padding: 25px; 
     border-radius: 30px; 
     text-align: center; 
     border: 1px solid rgba(0,0,0,0.05);
-    transition: 0.3s;
+    transition: transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s;
+    animation: scaleIn .5s cubic-bezier(.16,1,.3,1) both;
 }
+.member:nth-child(1) { animation-delay: .1s; }
+.member:nth-child(2) { animation-delay: .2s; }
+.member:nth-child(3) { animation-delay: .3s; }
+.member:nth-child(4) { animation-delay: .4s; }
 
 .member:hover { 
-    transform: translateY(-5px); 
-    box-shadow: 0 15px 35px rgba(0,0,0,0.05); 
+    transform: translateY(-6px) scale(1.02); 
+    box-shadow: 0 20px 45px rgba(0,0,0,0.08); 
 }
 
 .member-img { 
@@ -261,13 +330,14 @@
     font-weight: 700; 
     font-size: 1.1rem; 
     cursor: pointer; 
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    transition: all 0.35s cubic-bezier(.16, 1, .3, 1); 
 }
 
 .shop-now-btn:hover { 
-    transform: scale(1.05); 
+    transform: scale(1.06) translateY(-2px); 
     background: #0071e3; 
-    color: #ffffff; 
+    color: #ffffff;
+    box-shadow: 0 10px 30px rgba(0,113,227,0.3);
 }
 
 /* --- RESPONSIVE DESIGN --- */

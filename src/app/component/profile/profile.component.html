@@ -1,28 +1,140 @@
-<div class="profile-container" *ngIf="!loading">
-  <div class="profile-card">
-    
-    <div class="header-visual">
-      <div class="avatar">
-        {{ userName.length > 0 ? userName.charAt(0).toUpperCase() : 'U' }}
+<div class="profile-page" *ngIf="!loading">
+
+  <!-- ── LEFT: User Card ── -->
+  <aside class="sidebar">
+    <div class="user-card">
+      <div class="cover"></div>
+      <div class="avatar-wrap">
+        <div class="avatar" *ngIf="!profilePic">{{ userName.length > 0 ? userName.charAt(0).toUpperCase() : 'U' }}</div>
+        <img class="avatar avatar-img" *ngIf="profilePic" [src]="profilePic" alt="Profile" />
+        <button class="camera-btn" (click)="fileInput.click()" title="Change photo">
+          <i class="bi bi-camera-fill"></i>
+        </button>
+        <button class="remove-pic-btn" *ngIf="profilePic" (click)="removeProfilePic()" title="Remove photo">
+          <i class="bi bi-x"></i>
+        </button>
+        <input #fileInput type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
       </div>
+      <h2 class="user-name">{{ userName }}</h2>
+      <span class="user-role"><i class="bi bi-shield-check"></i> {{ role }}</span>
     </div>
 
-    <div class="content">
-      <h2 class="name">{{ userName }}</h2>
-      <span class="role-badge">{{ role }}</span>
+    <!-- Sidebar nav -->
+    <nav class="side-nav">
+      <a class="nav-link active">
+        <i class="bi bi-person"></i><span>My Profile</span>
+      </a>
+      <a class="nav-link" routerLink="/orders">
+        <i class="bi bi-bag"></i><span>My Orders</span>
+      </a>
+      <a class="nav-link" routerLink="/wishlist">
+        <i class="bi bi-heart"></i><span>Wishlist</span>
+      </a>
+      <a class="nav-link" routerLink="/contact">
+        <i class="bi bi-headset"></i><span>Support</span>
+      </a>
+    </nav>
 
-      <div class="stats">
-        <div class="stat-item">
-          <span>Status</span>
-          <strong class="text-success">Online</strong>
+    <button class="logout-btn" (click)="onLogout()">
+      <i class="bi bi-box-arrow-right"></i> Logout
+    </button>
+  </aside>
+
+  <!-- ── RIGHT: Content ── -->
+  <main class="content">
+
+    <!-- Quick Stats -->
+    <div class="stats-row">
+      <a class="stat-card" routerLink="/orders" [queryParams]="{status:'pending'}">
+        <div class="stat-icon pending"><i class="bi bi-credit-card-2-front"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Pending</span>
+          <span class="stat-desc">Payment</span>
+        </div>
+      </a>
+      <a class="stat-card" routerLink="/orders" [queryParams]="{status:'processing'}">
+        <div class="stat-icon processing"><i class="bi bi-arrow-repeat"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Processing</span>
+          <span class="stat-desc">In Progress</span>
+        </div>
+      </a>
+      <a class="stat-card" routerLink="/orders" [queryParams]="{status:'delivered'}">
+        <div class="stat-icon delivered"><i class="bi bi-box-seam"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Delivered</span>
+          <span class="stat-desc">Completed</span>
+        </div>
+      </a>
+      <a class="stat-card" routerLink="/orders" [queryParams]="{status:'cancelled'}">
+        <div class="stat-icon cancelled"><i class="bi bi-x-circle"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">Cancelled</span>
+          <span class="stat-desc">Refunded</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Account Settings -->
+    <section class="panel">
+      <h3 class="panel-title">Account Settings</h3>
+      <div class="settings-grid">
+        <a class="setting-card" routerLink="/profile">
+          <i class="bi bi-pencil-square"></i>
+          <div>
+            <span class="sc-label">Edit Profile</span>
+            <span class="sc-desc">Update name, email &amp; photo</span>
+          </div>
+          <i class="bi bi-chevron-right sc-arrow"></i>
+        </a>
+        <a class="setting-card" routerLink="/profile">
+          <i class="bi bi-geo-alt"></i>
+          <div>
+            <span class="sc-label">Shipping Address</span>
+            <span class="sc-desc">Manage delivery locations</span>
+          </div>
+          <i class="bi bi-chevron-right sc-arrow"></i>
+        </a>
+      </div>
+    </section>
+
+    <!-- Recent Purchases -->
+    <section class="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Recent Purchases</h3>
+        <a routerLink="/orders" class="see-all">View All <i class="bi bi-arrow-right"></i></a>
+      </div>
+
+      <!-- Loading -->
+      <div class="history-loading" *ngIf="ordersLoading">
+        <div class="sk-row" *ngFor="let x of [1,2,3]"></div>
+      </div>
+
+      <!-- Empty -->
+      <div class="history-empty" *ngIf="!ordersLoading && recentOrders.length === 0">
+        <i class="bi bi-bag"></i>
+        <div>
+          <h4>No purchases yet</h4>
+          <p>Your order history will appear here</p>
+        </div>
+        <a routerLink="/products" class="shop-link">Start Shopping</a>
+      </div>
+
+      <!-- Table -->
+      <div class="orders-table" *ngIf="!ordersLoading && recentOrders.length > 0">
+        <div class="t-head">
+          <span>Order</span><span>Date</span><span>Items</span><span>Total</span><span>Status</span>
+        </div>
+        <div class="t-row" *ngFor="let o of recentOrders; let i = index"
+             [style.animation-delay]="(i * 0.04) + 's'">
+          <span class="t-id">#{{ o.saleId }}</span>
+          <span class="t-date">{{ getOrderDate(o) }}</span>
+          <span class="t-items">{{ getItemCount(o) }} item{{ getItemCount(o) !== 1 ? 's' : '' }}</span>
+          <span class="t-total">{{ getOrderTotal(o) | currency:'USD':'symbol':'1.0-0' }}</span>
+          <span class="t-status" [style.--sc]="getStatusColor(o)">{{ getOrderStatus(o) }}</span>
         </div>
       </div>
+    </section>
 
-      <div class="actions">
-        <button class="btn-primary" routerLink="/products">Shop Now</button>
-        <button class="btn-logout" (click)="onLogout()">Log Out</button>
-      </div>
-    </div>
-
-  </div>
+  </main>
 </div>

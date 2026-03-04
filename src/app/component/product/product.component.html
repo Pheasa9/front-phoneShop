@@ -15,19 +15,15 @@
     <div class="toolbar">
   <div class="toolbar-row">
     <div class="search-box">
-      <span class="search-icon">🔎</span>
+      <span class="search-icon"></span>
       <input
         type="text"
         [(ngModel)]="searchQuery"
+        (input)="currentPage = 0"
         placeholder="Search devices..."
         class="input-field"
         aria-label="Search devices" />
     </div>
-
-    <button class="cart-btn" type="button" (click)="isCheckoutMode = true" aria-label="Open bag">
-      👜
-      <span class="bag-count" *ngIf="cartCount > 0">{{ cartCount }}</span>
-    </button>
   </div>
 </div>
 
@@ -50,52 +46,49 @@
     </div>
 
     <!-- BRANDS -->
-    <section class="brand-wrap" *ngIf="brands?.length">
-      <div class="brand-head">
-        <div class="brand-title">Brands</div>
+<section class="brand-wrap" *ngIf="brands?.length">
+  <div class="brand-viewport">
+    <div class="fade-left"></div>
+    <div class="fade-right"></div>
 
-        <div class="brand-nav">
-          <button class="brand-arrow" type="button" (click)="scrollBrand(-380)" aria-label="Scroll brands left">‹</button>
-          <button class="brand-arrow" type="button" (click)="scrollBrand(380)" aria-label="Scroll brands right">›</button>
-        </div>
+    <div class="brand-rail" #brandRail>
+      <div class="brand-track">
+
+        <!-- ALL -->
+        <button type="button"
+                class="brand-pill"
+                [class.active]="selectedBrandName === 'all'"
+                (click)="selectBrand('all')">
+          <span class="brand-icon"></span>
+          <span class="brand-name">All</span>
+        </button>
+
+        <!-- Brands -->
+       <button type="button"
+        *ngFor="let b of brands"
+        class="brand-pill"
+        [class.active]="selectedBrandName === b.name"
+        (click)="selectBrand(b.name)">
+
+  <span class="brand-icon">
+    <img [src]="'assets/img/brands/' + b.name.toLowerCase() + '.png'"
+         [alt]="b.name"
+         onerror="this.style.display='none'">
+  </span>
+
+  <span class="brand-name">{{ b.name }}</span>
+</button>
+
       </div>
-
-      <div class="brand-viewport">
-        <div class="fade-left"></div>
-        <div class="fade-right"></div>
-
-        <div class="brand-rail" #brandRail>
-          <div class="brand-track">
-
-            <!-- ALL -->
-            <button type="button"
-                    class="brand-pill"
-                    [class.active]="selectedBrandName === 'all'"
-                    (click)="selectBrand('all')">
-              <span class="brand-letter">A</span>
-              <span class="brand-name">All</span>
-            </button>
-
-            <!-- Brands -->
-            <button type="button"
-                    *ngFor="let b of brands"
-                    class="brand-pill"
-                    [class.active]="selectedBrandName === b.name"
-                    (click)="selectBrand(b.name)">
-              <span class="brand-letter">{{ (b.name || '?').charAt(0) }}</span>
-              <span class="brand-name">{{ b.name }}</span>
-            </button>
-
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
+  </div>
+</section>
 
     <!-- ================= PRODUCTS ================= -->
     <!-- ================= PRODUCTS ================= -->
 <div class="grid2" *ngIf="!isLoading && filteredProducts.length > 0">
 
-  <article *ngFor="let p of filteredProducts" class="p-card">
+  <article *ngFor="let p of paginatedProducts" class="p-card">
 
     <!-- TOP IMAGE -->
     <div class="p-media">
@@ -179,6 +172,56 @@
   </article>
 
 </div>
+
+    <!-- ================= PAGINATION ================= -->
+    <nav class="pg-bar" *ngIf="totalPages > 1" aria-label="Product pagination">
+
+      <button class="pg-arrow" type="button"
+              [disabled]="currentPage === 0"
+              (click)="goToPage(currentPage - 1)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+
+      <div class="pg-pages">
+        <!-- First page -->
+        <button *ngIf="pageNumbers[0] > 0"
+                class="pg-num" type="button"
+                (click)="goToPage(0)">1</button>
+        <span *ngIf="pageNumbers[0] > 1" class="pg-dots">…</span>
+
+        <!-- Visible pages -->
+        <button *ngFor="let p of pageNumbers"
+                class="pg-num"
+                [class.active]="p === currentPage"
+                type="button"
+                (click)="goToPage(p)">
+          {{ p + 1 }}
+        </button>
+
+        <span *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages - 2" class="pg-dots">…</span>
+        <!-- Last page -->
+        <button *ngIf="pageNumbers[pageNumbers.length - 1] < totalPages - 1"
+                class="pg-num" type="button"
+                (click)="goToPage(totalPages - 1)">{{ totalPages }}</button>
+      </div>
+
+      <button class="pg-arrow" type="button"
+              [disabled]="currentPage >= totalPages - 1"
+              (click)="goToPage(currentPage + 1)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+
+      <span class="pg-info">
+        {{ currentPage * pageSize + 1 }}–{{ Math.min((currentPage + 1) * pageSize, totalElements) }}
+        of {{ totalElements }}
+      </span>
+    </nav>
 
 
     <!-- LOADING -->
@@ -338,4 +381,64 @@
     </div>
   </ng-template>
 
+  <!-- ================= RECEIPT MODAL ================= -->
+<!-- ================= RECEIPT MODAL ================= -->
+<div class="receipt-backdrop" *ngIf="receiptOpen">
+  <div class="receipt-card">
+
+    <!-- HEADER (fixed) -->
+    <div class="r-head">
+      <div>
+        <div class="r-title">Receipt</div>
+        <div class="r-sub">
+          Sale ID: <b>{{ receipt?.saleId ?? receipt?.id }}</b>
+          • {{ receipt?.soldDate | date:'yyyy-MM-dd HH:mm' }}
+        </div>
+      </div>
+
+      <button type="button" class="r-close" (click)="receiptOpen=false">✕</button>
+    </div>
+
+    <!-- BODY (scroll) -->
+    <div class="r-body">
+      <div class="r-row r-top">
+        <span>Product</span>
+        <span class="t-right">Qty</span>
+        <span class="t-right">Price</span>
+        <span class="t-right">Total</span>
+      </div>
+
+      <div class="r-row" *ngFor="let it of (receipt?.items ?? receipt?.products ?? [])">
+        <div class="r-prod">
+          <div class="r-name">{{ it.productName ?? it.name }}</div>
+          <div class="r-meta">
+            {{ it.brand || '—' }} <span *ngIf="it.color">• {{ it.color }}</span>
+          </div>
+          <div class="r-meta2">#{{ it.productId ?? it.id }}</div>
+        </div>
+
+        <div class="t-right">{{ it.qty ?? it.unit }}</div>
+        <div class="t-right">{{ it.unitPrice ?? it.salePrice | currency:'USD' }}</div>
+        <div class="t-right"><b>{{ (it.lineTotal ?? it.amount) | currency:'USD' }}</b></div>
+      </div>
+
+      <div class="r-divider"></div>
+
+      <div class="r-total">
+        <span>Total</span>
+        <span class="r-total-val">{{ (receipt?.total ?? receipt?.amount) | currency:'USD' }}</span>
+      </div>
+
+      <div class="r-note">✅ Receipt sent to Telegram</div>
+    </div>
+
+    <!-- FOOTER (sticky) -->
+    <div class="r-actions">
+      <button type="button" class="r-btn" (click)="receiptOpen=false">Done</button>
+      <button type="button" class="r-btn primary" (click)="printReceipt()">Print</button>
+    </div>
+
+  </div>
 </div>
+</div>
+
